@@ -6,7 +6,7 @@ server.get('/', (req, res) => {
   res.send('online');
 });
 
-const port = 3000;
+let port = process.env.PORT || 3000;
 server.listen(port, () => {
   console.log('Application listening on ', port);
 });
