@@ -2,7 +2,7 @@ import {MongoClient} from 'mongodb';
 
 export let db = {};
 
-export function startMongo() {
+export function startMongo(cb) {
   const uriString = 'mongodb://' + process.env.MONGO_URL + '/' + process.env.MONGO_DB;
 
   // Use connect method to connect to the Server
@@ -18,5 +18,6 @@ export function startMongo() {
       db.type = database.collection('type');
       db.request = database.collection('request');
     }
+    if (cb) { cb() };
   });
 }

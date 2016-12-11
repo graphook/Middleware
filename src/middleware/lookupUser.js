@@ -9,7 +9,6 @@ export default function(req, res, next) {
       else {
         req.user = user;
         req.user.accessMethod = 'apikey';
-        console.log(req.user)
         next();
       }
     });
@@ -19,7 +18,6 @@ export default function(req, res, next) {
       else if (user) {
         req.user = user;
         req.user.accessMethod = 'token';
-        console.log(req.user)
         next();
       } else {
         next()
