@@ -1,0 +1,36 @@
+{
+	"title": "Cartoon Families",
+	"description": "A list of cartoon families",
+	"tags": ["cartoon", "family", "character", "fiction"],
+	"type": "584d75e8bba7a42e648ebf54",
+	"items": [
+		{
+			"surname": "Waterson",
+			"people": [
+				{
+					"firstName": "Gumball",
+					"age": 12
+				},
+				{
+					"firstName": "Darwin",
+					"age": 10
+				},
+				{
+					"firstName": "Anais",
+					"age": 4
+				},
+				{
+					"firstName": "Nicole",
+					"age": 38
+				},
+				{
+					"firstName": "Richard",
+					"age": 38
+				}
+			],
+			"lives": [
+				"Elmore"
+			]
+		}
+	]
+}

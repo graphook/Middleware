@@ -28,5 +28,6 @@ const recursiveCheck = function(item, type) {
 }
 
 export default function(item, type) {
+  if (item._type !== type._id) { return false }
   return recursiveCheck(item, type)
 }

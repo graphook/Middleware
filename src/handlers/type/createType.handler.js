@@ -4,6 +4,8 @@ import validateType from '../../validators/type.validator.js'
 module.exports = function(req, res, next) {
   let type = req.body;
   type.type = 'object';
+  type.numUses = 0;
+  type.uses = [];
   delete type.uses;
   if (!req.user) {
     next({

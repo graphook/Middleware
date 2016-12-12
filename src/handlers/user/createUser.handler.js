@@ -7,6 +7,7 @@ const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+")
 module.exports = function(req, res, next) {
   let body = req.body;
   if (!body.username || !body.email || !body.password) {
+    console.log('here')
     next({
       user: true,
       status: 400,

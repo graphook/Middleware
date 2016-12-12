@@ -1,0 +1,70 @@
+[
+	{
+    "surname": "Neutron",
+    "people": [
+      {
+        "firstName": "Jimmy",
+        "age": 12
+      },
+      {
+        "firstName": "Hugh",
+        "age": 40
+      },
+      {
+        "firstName": "Judy",
+        "age": 40
+      }
+    ],
+    "lives": [
+      "Retroville"
+    ]
+  },
+  {
+    "surname": "Turner",
+    "people": [
+      {
+        "firstName": "Timmy",
+        "age": 10
+      },
+      {
+        "firstName": "Dad",
+        "age": 42
+      },
+      {
+        "firstName": "Mom",
+        "age": 40
+      }
+    ],
+    "lives": [
+      "Dimmsdale"
+    ]
+  },
+  {
+    "surname": "Gaang",
+    "people": [
+      {
+        "firstName": "Aang",
+        "age": 12
+      },
+      {
+        "firstName": "Zuko",
+        "age": 16
+      },
+      {
+        "firstName": "Katara",
+        "age": 14
+      },
+      {
+        "firstName": "Sokka",
+        "age": 15
+      },
+      {
+        "firstName": "Toph",
+        "age": 12
+      }
+    ],
+    "lives": [
+      "Four Nations"
+    ]
+  }
+]
