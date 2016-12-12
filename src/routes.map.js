@@ -18,7 +18,7 @@ const routes = [
   {
     method: 'post',
     path: '/v1/set/:id/item/search',
-    hander: require('./handlers/set/searchSet.handler')
+    handler: require('./handlers/set/searchSet.handler')
   },
   {
     method: 'post',
@@ -47,7 +47,7 @@ const routes = [
   },
   {
     method: 'put',
-    path: '/v1/set/:id/item',
+    path: '/v1/set/:id/item/:itemId',
     handler: require('./handlers/set/updateItem.handler')
   },
   {
@@ -57,12 +57,12 @@ const routes = [
   },
   {
     method: 'put',
-    path: '/v1/set/star',
+    path: '/v1/set/:id/star',
     handler: require('./handlers/set/starSet.handler')
   },
   {
     method: 'put',
-    path: '/v1/set/unstar',
+    path: '/v1/set/:id/unstar',
     handler: require('./handlers/set/unstarSet.handler')
   },
   {

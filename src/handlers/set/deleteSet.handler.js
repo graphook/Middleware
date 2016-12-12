@@ -52,6 +52,9 @@ module.exports = function(req, res, next) {
             db.type.update({ uses: ObjectId(req.params.id) }, {
               $pull: {
                 uses: ObjectId(req.params.id)
+              },
+              $inc: {
+                numUses: -1
               }
             }, cb)
           }
