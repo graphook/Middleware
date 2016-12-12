@@ -17,6 +17,7 @@ module.exports = function(req, res, next) {
       message: "The set must have a title and a type."
     });
   } else {
+    // Get the type for this set
     db.type.findOne({ '_id': ObjectId(set.type) }, (err, result) => {
       if (err) { next(err) }
       else if (!result) {
@@ -27,15 +28,18 @@ module.exports = function(req, res, next) {
         });
       } else {
         const type = result;
+        // Insert the set
         db.set.insert({
           title: set.title,
           description: set.description,
           stars: 0,
           type: ObjectId(set.type),
-          tags: set.tags
+          tags: set.tags,
+          _creator: ObjectId(req.user._id)
         }, (err, result) => {
           if (err) { next(err) }
           else {
+            // Update the type to tell it that this set is using it
             const returnedSet = result;
             const setId = result.insertedIds[0];
             db.type.update({ '_id': ObjectId(set.type) }, {
@@ -48,7 +52,8 @@ module.exports = function(req, res, next) {
             }, (err, result) => {
               if (err) { next(err) }
               else {
-                createItems(setId, type, set.items, (err, result) => {
+                // Create the items that go in this set
+                createItems(setId, type, set.items, req.user._id, (err, result) => {
                   if (err) { next(err) }
                   else {
                     result.set = returnedSet

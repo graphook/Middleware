@@ -5,7 +5,7 @@ export default function(req, res, next) {
     body: req.body,
     path: req.path,
     method: req.method,
-    user: req.username
+    user: req.user
   });
   next();
 }

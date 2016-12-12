@@ -7,7 +7,6 @@ const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+")
 module.exports = function(req, res, next) {
   let body = req.body;
   if (!body.username || !body.email || !body.password) {
-    console.log('here')
     next({
       user: true,
       status: 400,
@@ -35,7 +34,8 @@ module.exports = function(req, res, next) {
           email: body.email,
           password: bcyrpt.hashSync(body.password),
           key: userKey,
-          tokens: []
+          tokens: [],
+          stars: []
         }, (err) => {
           if (err) { next(err) }
           else {

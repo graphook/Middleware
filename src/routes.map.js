@@ -26,24 +26,44 @@ const routes = [
     handler: require('./handlers/set/createSet.handler')
   },
   {
+    method: 'post',
+    path: '/v1/set/:id/clone',
+    handler: require('./handlers/set/cloneSet.handler')
+  },
+  {
     method: 'put',
     path: '/v1/set/:id',
     handler: require('./handlers/set/updateSetMetadata.handler')
   },
   {
-    method: 'put',
-    path: '/v1/set/:id/add',
+    method: 'post',
+    path: '/v1/set/:id/item',
     handler: require('./handlers/set/addToSet.handler')
   },
   {
-    method: 'put',
-    path: '/v1/set/:id/remove',
+    method: 'delete',
+    path: '/v1/set/:id/item',
     handler: require('./handlers/set/removeFromSet.handler')
   },
   {
+    method: 'put',
+    path: '/v1/set/:id/item',
+    handler: require('./handlers/set/updateItem.handler')
+  },
+  {
     method: 'delete',
-    path: '/v1/set/',
+    path: '/v1/set/:id',
     handler: require('./handlers/set/deleteSet.handler')
+  },
+  {
+    method: 'put',
+    path: '/v1/set/star',
+    handler: require('./handlers/set/starSet.handler')
+  },
+  {
+    method: 'put',
+    path: '/v1/set/unstar',
+    handler: require('./handlers/set/unstarSet.handler')
   },
   {
     method: 'get',
@@ -89,6 +109,11 @@ const routes = [
     method: 'put',
     path: '/v1/user/key',
     handler: require('./handlers/user/regenerateKey.handler')
+  },
+  {
+    method: 'get',
+    path: '/v1/user',
+    handler: require('./handlers/user/getUser.handler')
   }
 ]
 
