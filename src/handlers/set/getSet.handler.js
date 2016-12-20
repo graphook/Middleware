@@ -14,7 +14,7 @@ module.exports = function(req, res, next) {
       else if (!result) {
         next({
           user: true,
-          status: 401,
+          status: 404,
           message: "Set not found."
         });
       } else {

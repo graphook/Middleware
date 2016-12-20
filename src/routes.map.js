@@ -2,6 +2,11 @@
 const routes = [
   {
     method: 'get',
+    path: '/',
+    handler: require('./handlers/welcome.handler')
+  },
+  {
+    method: 'get',
     path: '/v1/set',
     handler: require('./handlers/set/getSets.handler')
   },
