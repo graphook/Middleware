@@ -101,6 +101,11 @@ const routes = [
     handler: require('./handlers/user/createUser.handler')
   },
   {
+    method: 'post',
+    path: '/v1/user/validate',
+    handler: require('./handlers/user/validateUser.handler')
+  },
+  {
     method: 'put',
     path: '/v1/user',
     handler: require('./handlers/user/updateUser.handler')
