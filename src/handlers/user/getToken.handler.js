@@ -5,7 +5,13 @@ import {ObjectID} from 'mongodb';
 
 module.exports = function(req, res, next) {
   const body = req.body;
-  if ((!body.username && !body.email) || !body.password) {
+  if (!req.user) {
+    next({
+      user: true,
+      status: 401,
+      message: "Access denied."
+    });
+  } else if ((!body.username && !body.email) || !body.password) {
     next({
       user: true,
       status: 400,
@@ -24,6 +30,11 @@ module.exports = function(req, res, next) {
           if (err) { next(err) }
           else {
             res.send({
+              user: {
+                username: user.username,
+                email: user.email,
+                key: user.key
+              },
               token: token
             });
           }

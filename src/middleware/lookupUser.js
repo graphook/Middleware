@@ -12,6 +12,11 @@ export default function(req, res, next) {
         next();
       }
     });
+  } else if (token && token === process.env.CLIENT_SECRET) {
+    req.user = {
+      accessMethod: 'client'
+    }
+    next();
   } else if (token) {
     db.user.findOne({ tokens: token }, (err, user) => {
       if (err) { res.status(500).send(err); }
