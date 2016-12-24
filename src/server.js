@@ -28,7 +28,6 @@ export default function startServer() {
       console.log('Error at route ', route, e);
     }
   });
-  // console.log(app._router.stack);
   app.use(errorHandler);
   let port = process.env.PORT || 3030;
   app.listen(port, () => {

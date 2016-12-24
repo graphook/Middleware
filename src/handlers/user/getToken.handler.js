@@ -15,12 +15,18 @@ module.exports = function(req, res, next) {
     next({
       user: true,
       status: 400,
-      message: 'Request must have a password and a username or email,.'
+      message: 'request must have a password and a username or email'
     });
   } else {
     db.user.findOne({ $or: [{ username: body.username }, { email: body.email }] }, (err, user) => {
       if (err) { next(err) }
-      else if (bcrypt.compareSync(body.password, user.password)) {
+      else if (!user) {
+        next({
+          user: true,
+          status: 401,
+          message: 'username / email and password do not match'
+        })
+      } else if (bcrypt.compareSync(body.password, user.password)) {
         let token = uuid.v4();
         db.user.update({'_id': ObjectID(user._id)}, {
           $push: {

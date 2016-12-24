@@ -32,8 +32,10 @@ module.exports = function(req, res, next) {
         db.set.insert({
           title: set.title,
           description: set.description,
+          icon: set.icon,
           stars: 0,
           type: ObjectId(set.type),
+          typeName: type.title,
           tags: set.tags,
           _creator: ObjectId(req.user._id)
         }, (err, result) => {
