@@ -34,10 +34,10 @@ module.exports = function(req, res, next) {
           description: set.description,
           icon: set.icon,
           stars: 0,
-          type: ObjectId(set.type),
+          type: set.type,
           typeName: type.title,
           tags: set.tags,
-          _creator: ObjectId(req.user._id)
+          _creator: req.user._id
         }, (err, result) => {
           if (err) { next(err) }
           else {

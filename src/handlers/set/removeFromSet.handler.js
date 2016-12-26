@@ -20,13 +20,13 @@ module.exports = function(req, res, next) {
     async.parallel({
       item: (cb) => {
         // find and remove all items that are only in this set
-        db.item.remove({ _id: { $in: toRemove } , _sets: { $size: 1, $eq: ObjectId(req.params.id) }}, (err) => {
+        db.item.remove({ _id: { $in: toRemove } , _sets: { $size: 1, $eq: req.params.id }}, (err) => {
           if (err) { cb(err) }
           else {
             // remove this set from all other items
-            db.item.update({ _id: { $in: toRemove }, _sets: ObjectId(req.params.id) }, {
+            db.item.update({ _id: { $in: toRemove }, _sets: req.params.id }, {
               $pull: {
-                _sets: ObjectId(req.params.id)
+                _sets: req.params.id
               }
             }, (err) => {
               cb(err)

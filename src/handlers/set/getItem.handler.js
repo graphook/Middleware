@@ -10,7 +10,7 @@ module.exports = function(req, res, next) {
       message: "Access denied."
     });
   } else {
-    db.item.find({ _id: ObjectId(req.params.itemId), _sets: ObjectId(req.paramsid) }, (err, result) => {
+    db.item.find({ _id: ObjectId(req.params.itemId), _sets: req.paramsid }, (err, result) => {
       if (err) { next(err) }
       else if (!result) {
         next({

@@ -11,7 +11,7 @@ module.exports = function(req, res, next) {
     });
   } else {
     // check if this set has already been starred by this user
-    db.user.findOne({ _id: ObjectId(req.user._id), stars: ObjectId(req.params.id) }, (err, user) => {
+    db.user.findOne({ _id: ObjectId(req.user._id), stars: req.params.id }, (err, user) => {
       if (err) { next(err) }
       else if (user) {
         next({
@@ -33,7 +33,7 @@ module.exports = function(req, res, next) {
             // add this set to the sets that are starred by this user
             db.user.update({ _id: ObjectId(req.user._id) }, {
               $push: {
-                stars: ObjectId(req.params.id)
+                stars: req.params.id
               }
             }, cb)
           }

@@ -11,7 +11,7 @@ module.exports = function(req, res, next) {
     });
   } else {
     // check if this set has been starred by this user
-    db.user.findOne({ _id: ObjectId(req.user._id), stars: ObjectId(req.params.id) }, (err, user) => {
+    db.user.findOne({ _id: ObjectId(req.user._id), stars: req.params.id }, (err, user) => {
       if (err) { next(err) }
       else if (!user) {
         next({
@@ -23,7 +23,7 @@ module.exports = function(req, res, next) {
         async.parallel({
           set: (cb) => {
             // decrement stars on this set
-            db.set.update({ _id: ObjectId(req.params.id) }, {
+            db.set.update({ _id: req.params.id }, {
               $inc: {
                 stars: -1
               }
@@ -33,7 +33,7 @@ module.exports = function(req, res, next) {
             // remove this set to the sets that are starred by this user
             db.user.update({ _id: ObjectId(req.user._id) }, {
               $pull: {
-                stars: ObjectId(req.params.id)
+                stars: req.params.id
               }
             }, cb)
           }

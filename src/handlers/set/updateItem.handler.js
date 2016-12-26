@@ -1,4 +1,5 @@
-import {db} from '../../mongo'
+import {db} from '../../mongo';
+import {ObjectId} from 'mongodb';
 
 module.exports = function(req, res, next) {
   if (!req.user) {
@@ -9,7 +10,7 @@ module.exports = function(req, res, next) {
     });
   } else {
     // Get the item
-    db.findOne({ _id: ObjectId(req.params.itemId), _sets: ObjectId(req.paramsid) }, (err, item) => {
+    db.findOne({ _id: ObjectId(req.params.itemId), _sets: req.paramsid }, (err, item) => {
       if (err) { next(err) }
       else if (!result) {
         next({
@@ -34,7 +35,7 @@ module.exports = function(req, res, next) {
         if (item._creator.toString() === req.user._id.toString()) {
           let bulk = db.item.initializeUnorderedBulkOp();
           updates.forEach((update) => {
-            
+
           })
         } else {
           // TODO: implement this

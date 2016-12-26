@@ -14,7 +14,7 @@ export default function(setId, type, items, userId, parentCb) {
     if (typeof item === 'object' && !Array.isArray(item)) {
       objectItems.push(item);
     } else if (typeof item === 'string') {
-      idItems.push(ObjectId(item));
+      idItems.push(item);
     } else {
       errors.push(item + ' is not a valid item.');
     }
@@ -23,8 +23,8 @@ export default function(setId, type, items, userId, parentCb) {
   let validatedObjectItems = [];
   objectItems.forEach((item) => {
     item._type = type._id
-    item._sets = [ObjectId(setId)]
-    item._creator = ObjectId(userId);
+    item._sets = [setId]
+    item._creator = userId;
     if (!validateItem(item, type)) {
       errors.push(item + ' does not follow the type.')
     } else {
@@ -35,7 +35,7 @@ export default function(setId, type, items, userId, parentCb) {
   idItems.forEach((itemId) => {
     bulk.find({ '_id': itemId, '_type': ObjectId(type._id), '_creator': ObjectId(userId) }).updateOne({
       $push: {
-        _sets: ObjectId(setId)
+        _sets: setId
       }
     });
   });
@@ -45,8 +45,8 @@ export default function(setId, type, items, userId, parentCb) {
   async.parallel({
       updated: (cb) => {
         // Get all qualified already created items
-        db.item.find({ '_id': { $in: idItems }, '_type': ObjectId(type._id),
-            '_creator': ObjectId(userId) }).toArray((err, result) => {
+        db.item.find({ '_id': { $in: idItems.map(idItem => ObjectId(idItem)) }, '_type': type._id,
+            '_creator': userId }).toArray((err, result) => {
           if (err) { cb(err) }
           else {
             let modifiedIds = [];
@@ -85,7 +85,7 @@ export default function(setId, type, items, userId, parentCb) {
         errors = errors.concat(results.inserted.errors).concat(results.updated.errors)
         let allIds = results.inserted.ids.concat(results.updated.ids)
         // update the set to reference the newly created items and already created items
-        db.set.update({ '_id': ObjectId(setId), '_creator': ObjectId(userId) }, {
+        db.set.update({ '_id': ObjectId(setId), '_creator': userId }, {
           $pushAll: {
             items: allIds
           }

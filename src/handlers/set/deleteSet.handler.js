@@ -29,13 +29,13 @@ module.exports = function(req, res, next) {
         async.parallel({
           item: (cb) => {
             // Find and delete all items that are only a part of this set
-            db.item.remove({ _sets: { $size: 1, $eq: ObjectId(req.params.id) }}, (err) => {
+            db.item.remove({ _sets: { $size: 1, $eq: req.params.id }}, (err) => {
               if (err) { cb(err) }
               else {
                 // Find all other items and remove this set from them
-                db.item.update({ _sets: ObjectId(req.params.id) }, {
+                db.item.update({ _sets: req.params.id }, {
                   $pull: {
-                    _sets: ObjectId(req.params.id)
+                    _sets: req.params.id
                   }
                 }, (err) => {
                   cb(err)
@@ -49,9 +49,9 @@ module.exports = function(req, res, next) {
           },
           type: (cb) => {
             // remove from type
-            db.type.update({ uses: ObjectId(req.params.id) }, {
+            db.type.update({ uses: req.params.id }, {
               $pull: {
-                uses: ObjectId(req.params.id)
+                uses: req.params.id
               },
               $inc: {
                 numUses: -1

@@ -19,7 +19,7 @@ module.exports = function(req, res, next) {
         db.set.findOne({ '_id': ObjectId(setId) }, cb);
       },
       type: (cb) => {
-        db.type.findOne({ uses: ObjectId(req.params.id) }, cb);
+        db.type.findOne({ uses: req.params.id }, cb);
       }
     }, (err, results) => {
       results = results || {}

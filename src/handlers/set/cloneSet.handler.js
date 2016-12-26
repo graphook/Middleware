@@ -23,7 +23,7 @@ module.exports = function(req, res, next) {
       } else {
         let set = result;
         // Change creator for the set
-        set._creator = ObjectId(req.user._id)
+        set._creator = req.user._id
         delete set._id;
         // Re-insert the set with the new creator
         db.set.insert(set, (err, result) => {

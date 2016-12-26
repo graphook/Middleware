@@ -1,4 +1,5 @@
-import {db} from '../../mongo'
+import {db} from '../../mongo';
+import {ObjectId} from 'mongodb';
 
 module.exports = function(req, res, next) {
   // get set by id
