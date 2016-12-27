@@ -8,6 +8,7 @@ export default function(req, res, next) {
       if (err) { res.status(500).send(err); }
       else {
         req.user = user;
+        req.user._id = req.user._id.toString();
         req.user.accessMethod = 'apikey';
         next();
       }
@@ -22,6 +23,7 @@ export default function(req, res, next) {
       if (err) { res.status(500).send(err); }
       else if (user) {
         req.user = user;
+        req.user._id = req.user._id.toString();
         req.user.accessMethod = 'token';
         next();
       } else {

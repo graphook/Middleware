@@ -43,7 +43,7 @@ module.exports = function(req, res, next) {
           else {
             // Update the type to tell it that this set is using it
             const returnedSet = result;
-            const setId = result.insertedIds[0];
+            const setId = result.insertedIds[0].toString();
             db.type.update({ '_id': ObjectId(set.type) }, {
               $push: {
                 uses: setId
