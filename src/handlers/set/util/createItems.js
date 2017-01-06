@@ -23,6 +23,9 @@ export default function(setId, type, items = [], userIdInput, parentCb) {
   });
   // Validate Object items
   let validatedObjectItems = [];
+  let bulkLength = 0;
+  console.log(objectItems);
+  console.log(idItems);
   objectItems.forEach((item) => {
     item._type = typeId
     item._sets = [setId]
@@ -31,10 +34,13 @@ export default function(setId, type, items = [], userIdInput, parentCb) {
       errors.push(JSON.stringify(item) + ' does not follow the type.')
     } else {
       bulk.insert(item);
+      bulkLength++;
     }
   });
+  console.log(errors);
   // Create the requests to update the already created items
   idItems.forEach((itemId) => {
+    bulkLength++;
     bulk.find({ '_id': ObjectId(itemId), '_type': typeId, '_creator': userId }).updateOne({
       $push: {
         _sets: setId
@@ -73,7 +79,7 @@ export default function(setId, type, items = [], userIdInput, parentCb) {
       },
       inserted: (cb) => {
         // Run the request to update all items
-        if (objectItems.length > 0 || idItems.lenth > 0) {
+        if (bulkLength > 0) {
           bulk.execute((err, result) => {
             if (err) { cb(err) }
             cb(null, {
@@ -91,13 +97,11 @@ export default function(setId, type, items = [], userIdInput, parentCb) {
         errors = errors.concat(results.inserted.errors).concat(results.updated.errors)
         let allIds = results.inserted.ids.concat(results.updated.ids).map(objectIds => objectIds.toString())
         // update the set to reference the newly created items and already created items
-        console.log(setId);
         db.set.update({ '_id': ObjectId(setId), '_creator': userId }, {
           $pushAll: {
             items: allIds
           }
         }, (err, result) => {
-          console.log(result);
           if (err) { parentCb(err) }
           else {
             parentCb(null, {

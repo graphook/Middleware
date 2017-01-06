@@ -23,7 +23,7 @@ module.exports = function(req, res, next) {
         async.parallel({
           set: (cb) => {
             // decrement stars on this set
-            db.set.update({ _id: req.params.id }, {
+            db.set.update({ _id: ObjectId(req.params.id) }, {
               $inc: {
                 stars: -1
               }

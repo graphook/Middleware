@@ -13,17 +13,22 @@ const routes = [
   {
     method: 'get',
     path: '/v1/set/:id',
-    hander: require('./handlers/set/getSet.handler')
+    handler: require('./handlers/set/getSet.handler')
   },
   {
-    method: 'get',
-    path: '/v1/set/:id/item/:itemId',
-    hander: require('./handlers/set/getItem.handler')
+    method: 'post',
+    path: '/v1/set/search',
+    handler: require('./handlers/set/searchSet.handler')
   },
   {
     method: 'post',
     path: '/v1/set/:id/item/search',
-    handler: require('./handlers/set/searchSet.handler')
+    handler: require('./handlers/set/searchItem.handler')
+  },
+  {
+    method: 'get',
+    path: '/v1/set/:id/item/:itemId',
+    handler: require('./handlers/set/getItem.handler')
   },
   {
     method: 'post',

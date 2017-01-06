@@ -1,6 +1,7 @@
 import {db} from '../../mongo';
 import {ObjectId} from 'mongodb';
 
+// TODO: handle errors for non ids
 module.exports = function(req, res, next) {
   // get set by id
   if (!req.user) {
@@ -10,7 +11,7 @@ module.exports = function(req, res, next) {
       message: "Access denied."
     });
   } else {
-    db.set.find({ _id: ObjectId(req.params.id)}, (err, result) => {
+    db.set.findOne({ _id: ObjectId(req.params.id)}, (err, result) => {
       if (err) { next(err) }
       else if (!result) {
         next({

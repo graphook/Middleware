@@ -37,7 +37,9 @@ module.exports = function(req, res, next) {
           type: set.type,
           typeName: type.title,
           tags: set.tags,
-          _creator: req.user._id
+          _creator: req.user._id,
+          creatorName: req.user.username,
+          items: []
         }, (err, result) => {
           if (err) { next(err) }
           else {

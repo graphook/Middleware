@@ -1,5 +1,6 @@
 import {db} from '../../mongo'
 import {ObjectId} from 'mongodb'
+import validateObjectId from '../../validators/objectId.validator'
 
 module.exports = function(req, res, next) {
   // get item by id
@@ -8,6 +9,12 @@ module.exports = function(req, res, next) {
       user: true,
       status: 401,
       message: "Access denied."
+    });
+  } else if (!validateObjectId(req.params.itemId)) {
+    next({
+      user: true,
+      status: 400,
+      message: "Invalid Object Id"
     });
   } else {
     db.item.find({ _id: ObjectId(req.params.itemId), _sets: req.paramsid }, (err, result) => {

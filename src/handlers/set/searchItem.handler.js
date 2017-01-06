@@ -1,5 +1,5 @@
 import {db} from '../../mongo'
-import validateObjectId from '../../validators/objectId.validator';
+import {ObjectId} from 'mongodb'
 import cleanseMongoQuery from './util/cleanseMongoQuery';
 
 module.exports = function(req, res, next) {
@@ -13,9 +13,10 @@ module.exports = function(req, res, next) {
   } else {
     try {
       let query = cleanseMongoQuery(req.body || {});
+      query._sets = req.params.id;
       const count = parseInt(req.query.count) || 10;
       const page = parseInt(req.query.page) || 0;
-      db.set.find(query).skip(count * page).limit(count).toArray((err, result) => {
+      db.item.find(query).skip(count * page).limit(count).toArray((err, result) => {
         if (err) { next(err) }
         else {
           res.send(result)
