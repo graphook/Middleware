@@ -12,8 +12,6 @@ export default function startServer() {
   startMongo();
   let app = express();
   app.use(bodyParser.json());
-  app.use(lookupUser);
-  app.use(logRequest);
   routes.forEach((route) => {
     try {
       if (route.middleware) {

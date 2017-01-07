@@ -1,7 +1,7 @@
 import cleanse from '../util/cleanse';
 
 export default function(scope) {
-  scope.status = scope.status || 201;
+  scope.status = scope.status || 200;
   scope.res.status(scope.status).send({
     status: scope.status,
     errors: scope.errors,

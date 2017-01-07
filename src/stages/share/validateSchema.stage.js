@@ -1,30 +1,49 @@
 
 export default function recursiveCheck(item, type, errors, path, parent, parentKey) {
-  if (type.required && !item) {
-    errors[path.join('.')] = 'required';
-    return;
-  } else if (type.default && !item && parent && parentKey) {
+  if (type.default && !item && parent && parentKey) {
     parent[parentKey] = type.default;
-  } else if (!type.required && !item) {
-    return;
   }
   if (type.type === 'object') {
     if (typeof item !== 'object') {
       errors[path.join('.')] = ' should be an object but is a ' + typeof item;
       return;
     }
-    const propKeys = Object.keys(type.properties);
-    const itemPropertySet = new Set(Object.keys(item));
-    for (let i = 0; i < propKeys.length; i ++) {
-      itemPropertySet.delete(propKeys[i]);
-      const tempPath = path.slice(0);
-      tempPath.push(propKeys[i]);
-      recursiveCheck(item[propKeys[i]], type.properties[propKeys[i]], errors, tempPath, item, propKeys[i]);
+    const fieldKeys = Object.keys(type.fields);
+    const itemFieldSet = new Set(Object.keys(item));
+    if (type.requires) {
+      type.requires.forEach((field) => {
+        if (item[field] == null) {
+          errors[[...path, field].join('.')] = 'is required';
+        }
+      });
     }
-    if (!type.allowOtherProperties && itemPropertySet.size !== 0) {
-      let str = 'Does not allow the properties';
-      itemPropertySet.forEach((property) => {
-        str += ' ' + property + ',';
+    if (type.requiresAtLeast) {
+      let count = 0;
+      type.requiresAtLeast.fields.forEach((field) => {
+        if (item[field] != null) {
+          count++;
+        }
+      });
+      if (count < type.requiresAtLeast.count) {
+        let str = 'Requires at least ' + type.requiresAtLeast.count + ' fields out of'
+        type.requiresAtLeast.fields.forEach((field) => {
+          str += ' ' + field + ',';
+        });
+        errors[path.join('.')] = str;
+      }
+    }
+    fieldKeys.forEach((field) => {
+      itemFieldSet.delete(field);
+      if (item[field] != null) {
+        const tempPath = path.slice(0);
+        tempPath.push(field);
+        recursiveCheck(item[field], type.fields[field], errors, tempPath, item, field);
+      }
+    })
+    if (!type.allowOtherFields && itemFieldSet.size !== 0) {
+      let str = 'Does not allow the fields';
+      itemFieldSet.forEach((field) => {
+        str += ' ' + field + ',';
       });
       errors[path.join('.')] = str;
     }

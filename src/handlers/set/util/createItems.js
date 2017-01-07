@@ -24,8 +24,6 @@ export default function(setId, type, items = [], userIdInput, parentCb) {
   // Validate Object items
   let validatedObjectItems = [];
   let bulkLength = 0;
-  console.log(objectItems);
-  console.log(idItems);
   objectItems.forEach((item) => {
     item._type = typeId
     item._sets = [setId]
@@ -37,7 +35,6 @@ export default function(setId, type, items = [], userIdInput, parentCb) {
       bulkLength++;
     }
   });
-  console.log(errors);
   // Create the requests to update the already created items
   idItems.forEach((itemId) => {
     bulkLength++;
