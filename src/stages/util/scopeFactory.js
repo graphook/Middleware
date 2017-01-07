@@ -3,7 +3,6 @@ export default function(req, res) {
     req: req,
     res: res,
     errors: {},
-    auth: {},
     users: {
       read: [],
       created: [],

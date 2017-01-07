@@ -1,59 +1,58 @@
-import {db} from '../../mongo';
-import validateItem from '../../validators/item.validator.js';
-import validateType from '../../validators/type.validator.js';
+import Promise from 'bluebird';
+import scopeFactory from 'stages/util/scopeFactory'
+import checkIfUser from 'stages/share/checkIfUserOrClient.stage'
+import logRequest from 'stages/share/logRequest.stage'
+import validateRequest from 'stages/share/validateSchema.stage';
+import throwErrorIfNeeded from 'stages/share/throwErrorIfNeeded.stage';
+import validateTypeProperties from 'stages/type/validateTypeProperties.stage';
+import simpleInsert from 'stages/share/simpleInsert.stage';
+import response from 'stages/share/response.stage';
+import handleError from 'stages/share/handleError.stage';
 
 const requestBodyType = {
   title: "Create Type Request",
   description: "The request body of a request to create a type in Zenow v1.",
   properties: {
-    title: {
-      required: true,
-      type: "string",
-      description: "The title of the type."
-    },
-    description: {
-      required: false,
-      type: "string",
-      default: ""
-    },
-    properties: {
-      required: true,
-      type: "object",
-      properties: {},
-      allowOtherProperties: true
-    },
-    tags: {
-      required: false,
-      type: "array",
-      default: [],
+    type: "object",
+    required: ["title", "properties"],
+    fields: {
+      title: {
+        type: "string",
+        description: "The title of the type."
+      },
+      description: {
+        type: "string",
+        default: ""
+      },
+      properties: {
+        requires: ["type"],
+        type: "object",
+        allowOtherFields: true,
+        fields: {
+          type: {
+            type: 'constant',
+            value: 'object'
+          }
+        },
+        allowOtherProperties: true
+      },
+      tags: {
+        type: "array",
+        default: [],
+      }
     }
   }
 }
 
-module.exports = function(req, res, next) {
-  let type = req.body;
-  type.type = 'object';
-  type.numUses = 0;
-  delete type.uses;
-  type.uses = [];
-  if (!req.user) {
-    next({
-      user: true,
-      status: 401,
-      message: "Access denied."
-    });
-  } else if (!validateType(type)) {
-    next({
-      user: true,
-      status: 400,
-      message: "The provided format is invalid."
-    });
-  } else {
-    db.type.insert(type, (err, inserted) => {
-      if (err) { next(err) }
-      else {
-        res.status(201).send(inserted)
-      }
-    });
-  }
+module.exports = function(req, res) {
+  const scope = scopeFactory(req, res);
+  Promise.try(() => checkIfUser(scope))
+    .then(() => logRequest(scope))
+    .then(() => validateRequest(scope.req.body, requestBodyType.properties, scope.errors, ['body']))
+    .then(() => throwErrorIfNeeded(scope.errors))
+    .then(() => validateTypeProperties(scope.req.body.properties, scope.errors, ['body']))
+    .then(() => throwErrorIfNeeded(scope.errors))
+    .then(() => simpleInsert(scope, 'type', Object.assign(scope.req.body, { uses: [], numUses: 0 })))
+    .then(() => response(scope))
+    .catch((err) => handleError(err, scope));
 }

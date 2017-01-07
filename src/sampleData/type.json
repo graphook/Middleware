@@ -2,30 +2,33 @@
   "title": "Family",
   "description": "Describes a family unit. Usually one that lives in the same house.",
   "properties": {
-    "surname": {
-      "type": "string"
-    },
-    "people": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "firstName": {
-            "type": "string"
-          },
-          "age": {
-            "type": "number"
-          },
-          "isParent": {
-            "type": "boolean"
+    "type": "object",
+    "fields": {
+      "surname": {
+        "type": "string"
+      },
+      "people": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "firstName": {
+              "type": "string"
+            },
+            "age": {
+              "type": "number"
+            },
+            "isParent": {
+              "type": "boolean"
+            }
           }
         }
-      }
-    },
-    "lives": {
-      "type": "array",
-      "items": {
-        "type": "string"
+      },
+      "lives": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
       }
     }
   }

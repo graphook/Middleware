@@ -96,6 +96,11 @@ const routes = [
     handler: require('./handlers/type/updateType.handler')
   },
   {
+    method: 'delete',
+    path: '/v1/type/:id',
+    handler: require('./handlers/type/deleteType.handler')
+  },
+  {
     method: 'post',
     path: '/v1/auth/token',
     handler: require('./handlers/user/getToken.handler')

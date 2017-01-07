@@ -8,7 +8,6 @@ export default function recursiveCheck(item, type, errors, path, parent, parentK
       errors[path.join('.')] = ' should be an object but is a ' + typeof item;
       return;
     }
-    const fieldKeys = Object.keys(type.fields);
     const itemFieldSet = new Set(Object.keys(item));
     if (type.requires) {
       type.requires.forEach((field) => {
@@ -32,7 +31,7 @@ export default function recursiveCheck(item, type, errors, path, parent, parentK
         errors[path.join('.')] = str;
       }
     }
-    fieldKeys.forEach((field) => {
+    Object.keys(type.fields).forEach((field) => {
       itemFieldSet.delete(field);
       if (item[field] != null) {
         const tempPath = path.slice(0);
@@ -41,7 +40,7 @@ export default function recursiveCheck(item, type, errors, path, parent, parentK
       }
     })
     if (!type.allowOtherFields && itemFieldSet.size !== 0) {
-      let str = 'Does not allow the fields';
+      let str = 'Does not allow the fields:';
       itemFieldSet.forEach((field) => {
         str += ' ' + field + ',';
       });
@@ -70,6 +69,10 @@ export default function recursiveCheck(item, type, errors, path, parent, parentK
   } else if (type.type === 'boolean') {
     if (typeof item !== 'boolean') {
       errors[path.join('.')] = 'Should be an boolean but is a ' + typeof item;
+    }
+  } else if (type.type === 'constant') {
+    if (item !== type.value) {
+      errors[path.join('.')] = 'Must be the value: ' + type.value;
     }
   } else if (type.type !== 'any') {
     errors[path.join('.')] = 'Is a type that should not exist (' + type.type + '). Use a different Zenow type.';
