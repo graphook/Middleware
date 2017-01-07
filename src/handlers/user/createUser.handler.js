@@ -1,12 +1,19 @@
-import {db} from '../../mongo';
-import bcyrpt from 'bcrypt-nodejs';
-import uuid from 'node-uuid';
-import validateUser from './utils/validateUser';
-import validateRequest from '../../validators/item.validator.js';
+import Promise from 'bluebird';
+import scopeFactory from 'stages/util/scopeFactory'
+import checkIfUserOrClient from 'stages/share/checkIfUserOrClient.stage'
+import logRequest from 'stages/share/logRequest.stage'
+import validateRequest from 'stages/share/validateSchema.stage';
+import throwErrorIfNeeded from 'stages/share/throwErrorIfNeeded.stage';
+import checkIfDuplicateUser from 'stages/user/checkIfDuplicateUser.stage';
+import saveNewUser from 'stages/user/saveNewUser.stage';
+import response from 'stages/share/response.stage';
+import handleError from 'stages/share/handleError.stage';
+
 
 const requestBodyType = {
   title: "Create User Request",
   description: "The request body of a request to create a user in Zenow v1.",
+  type: "object",
   properties: {
     username: {
       required: true,
@@ -29,32 +36,16 @@ const requestBodyType = {
   }
 }
 
-module.exports = function(req, res, next) {
-  const body = req.body;
-  const errors = [];
-  validateRequest(body, requestBodyType, errors, ['body']);
-  validateUser(req, res, errors, () => {
-    if (errors) {
-      next(errors);
-    } else {
-      const userKey = uuid.v4();
-      db.user.insert({
-        username: body.username,
-        email: body.email,
-        password: bcyrpt.hashSync(body.password),
-        key: userKey,
-        tokens: [],
-        stars: []
-      }, (err) => {
-        if (err) { next(err) }
-        else {
-          res.status(201).send({
-            username: body.username,
-            email: body.email,
-            key: userKey
-          });
-        }
-      });
-    }
-  })
+module.exports = function(req, res) {
+  const errors = {};
+  const scope = scopeFactory(req, res);
+  Promise.try(() => checkIfUserOrClient(scope))
+    .then(() => logRequest(scope))
+    .then(() => validateRequest(scope.req.body, requestBodyType, scope.errors, ['body']))
+    .then(() => throwErrorIfNeeded(scope.errors))
+    .then(() => checkIfDuplicateUser(scope.req.body, scope.errors))
+    .then(() => throwErrorIfNeeded(scope.errors))
+    .then(() => saveNewUser(scope.req.body, scope))
+    .then(() => response(scope))
+    .catch((err) => handleError(err, scope));
 }

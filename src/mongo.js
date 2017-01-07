@@ -1,7 +1,7 @@
 import {MongoClient} from 'mongodb';
 import {promisifyAll} from 'bluebird';
 
-export let db = {};
+export const db = {};
 
 export function startMongo(cb) {
   let uriString = uriString = 'mongodb://' + process.env.MONGO_USER + ':' + process.env.MONGO_PASS +
@@ -22,6 +22,7 @@ export function startMongo(cb) {
       db.item = promisifyAll(database.collection('item'));
       db.type = promisifyAll(database.collection('type'));
       db.request = promisifyAll(database.collection('request'));
+      db.error = promisifyAll(database.collection('error'))
     }
     if (cb) { cb() };
   });
