@@ -1,6 +1,6 @@
 import Promise from 'bluebird';
 import scopeFactory from 'stages/util/scopeFactory'
-import checkIfUser from 'stages/share/checkIfUserOrClient.stage'
+import checkIfUser from 'stages/share/checkIfUser.stage'
 import logRequest from 'stages/share/logRequest.stage'
 import validateRequest from 'stages/share/validateSchema.stage';
 import throwErrorIfNeeded from 'stages/share/throwErrorIfNeeded.stage';

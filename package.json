@@ -10,7 +10,7 @@
     "test": "mocha \"src/**/*.spec.js\" --compilers js:babel-register",
     "coverage": "babel-node node_modules/.bin/babel-istanbul cover _mocha -- \"src/**/*.spec.js\"",
     "postinstall": "npm run build",
-    "init": "babel-node src/init.js"
+    "init": "better-npm-run init"
   },
   "betterScripts": {
     "dev": {
@@ -20,6 +20,9 @@
         "NODE_ENV": "dev",
         "PORT": 3030
       }
+    },
+    "init": {
+      "command": "babel-node src/init.js"
     }
   },
   "repository": {

@@ -1,15 +1,13 @@
 import {db} from '../../mongo';
-import {ObjectID} from 'mongodb';
+import {ObjectId} from 'mongodb';
 
 export default function(scope, collection, id, body) {
-  return db[collection].update({ '_id': ObjectID(id) }, {
-    $set: body
-  }).then(() => {
-    return db[collection].findOne({ '_id': ObjectID(id) }).then((result) => {
-      scope[collection + 's'].updated.push(result);
-    }).catch((err) => {
-      throw err;
-    });
+  console.log(body);
+  console.log(id);
+  return db[collection].findAndModify({ '_id': ObjectId(id) }, null, { $set: body }, { new: true }).then((result) => {
+    console.log(result)
+    scope[collection + 's'].updated.push(result.value);
+    scope.status = 200;
   }).catch((err) => {
     throw err;
   })

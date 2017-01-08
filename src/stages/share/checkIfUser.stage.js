@@ -2,7 +2,7 @@ import Promise from 'bluebird';
 import {db} from 'mongo';
 
 export default function(scope) {
-  const apiKey = scope.req.query.apikey;
+  const apiKey = scope.req.query.apikey || scope.req.get('apikey');
   const token = scope.req.get('Authorization');
   if (apiKey) {
     return db.user.findOne({ key: apiKey }).then((user) => {
@@ -16,6 +16,10 @@ export default function(scope) {
     }).catch((err) => {
       throw err;
     });
+  } else if (token && token === process.env.CLIENT_SECRET) {
+    scope.status = 401;
+    scope.errors.auth = 'Must log in to the website.'
+    throw scope;
   } else if (token) {
     db.user.findOne({ tokens: token }).then((user) => {
       if (!user) {
@@ -30,7 +34,7 @@ export default function(scope) {
     });
   } else {
     scope.status = 401;
-    scope.errors.auth = 'Must provide an apikey.'
+    scope.errors.auth = 'Must provide an apikey, or access via the website.'
     throw scope;
   }
 }

@@ -1,8 +1,5 @@
 
 export default function recursiveCheck(item, type, errors, path, parent, parentKey) {
-  if (type.default && !item && parent && parentKey) {
-    parent[parentKey] = type.default;
-  }
   if (type.type === 'object') {
     if (typeof item !== 'object') {
       errors[path.join('.')] = ' should be an object but is a ' + typeof item;
@@ -37,6 +34,8 @@ export default function recursiveCheck(item, type, errors, path, parent, parentK
         const tempPath = path.slice(0);
         tempPath.push(field);
         recursiveCheck(item[field], type.fields[field], errors, tempPath, item, field);
+      } else if (item[field] == null && type.fields[field].default != null) {
+        item[field] = type.fields[field].default;
       }
     })
     if (!type.allowOtherFields && itemFieldSet.size !== 0) {

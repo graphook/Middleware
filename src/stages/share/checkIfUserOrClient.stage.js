@@ -2,7 +2,7 @@ import Promise from 'bluebird';
 import {db} from 'mongo';
 
 export default function(scope) {
-  const apiKey = scope.req.query.apikey;
+  const apiKey = scope.req.query.apikey || scope.req.get('apikey');;
   const token = scope.req.get('Authorization');
   if (apiKey) {
     return db.user.findOne({ key: apiKey }).then((user) => {

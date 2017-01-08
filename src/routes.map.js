@@ -12,7 +12,7 @@ const routes = [
   },
   {
     method: 'get',
-    path: '/v1/set/:id',
+    path: '/v1/set/:setId',
     handler: require('./handlers/set/getSet.handler')
   },
   {
@@ -22,12 +22,12 @@ const routes = [
   },
   {
     method: 'post',
-    path: '/v1/set/:id/item/search',
+    path: '/v1/set/:setId/item/search',
     handler: require('./handlers/set/searchItem.handler')
   },
   {
     method: 'get',
-    path: '/v1/set/:id/item/:itemId',
+    path: '/v1/set/:setId/item/:itemId',
     handler: require('./handlers/set/getItem.handler')
   },
   {
@@ -37,42 +37,42 @@ const routes = [
   },
   {
     method: 'post',
-    path: '/v1/set/:id/clone',
+    path: '/v1/set/:setId/clone',
     handler: require('./handlers/set/cloneSet.handler')
   },
   {
     method: 'put',
-    path: '/v1/set/:id',
+    path: '/v1/set/:setId',
     handler: require('./handlers/set/updateSetMetadata.handler')
   },
   {
     method: 'post',
-    path: '/v1/set/:id/item',
+    path: '/v1/set/:setId/item',
     handler: require('./handlers/set/addToSet.handler')
   },
   {
     method: 'delete',
-    path: '/v1/set/:id/item',
+    path: '/v1/set/:setId/item',
     handler: require('./handlers/set/removeFromSet.handler')
   },
   {
     method: 'put',
-    path: '/v1/set/:id/item/:itemId',
+    path: '/v1/set/:setId/item/:itemId',
     handler: require('./handlers/set/updateItem.handler')
   },
   {
     method: 'delete',
-    path: '/v1/set/:id',
+    path: '/v1/set/:setId',
     handler: require('./handlers/set/deleteSet.handler')
   },
   {
     method: 'put',
-    path: '/v1/set/:id/star',
+    path: '/v1/set/:setId/star',
     handler: require('./handlers/set/starSet.handler')
   },
   {
     method: 'put',
-    path: '/v1/set/:id/unstar',
+    path: '/v1/set/:setId/unstar',
     handler: require('./handlers/set/unstarSet.handler')
   },
   {
@@ -82,7 +82,7 @@ const routes = [
   },
   {
     method: 'get',
-    path: '/v1/type/:id',
+    path: '/v1/type/:typeId',
     handler: require('./handlers/type/getType.handler')
   },
   {
@@ -92,12 +92,12 @@ const routes = [
   },
   {
     method: 'put',
-    path: '/v1/type/:id',
+    path: '/v1/type/:typeId',
     handler: require('./handlers/type/updateType.handler')
   },
   {
     method: 'delete',
-    path: '/v1/type/:id',
+    path: '/v1/type/:typeId',
     handler: require('./handlers/type/deleteType.handler')
   },
   {

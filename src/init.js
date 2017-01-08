@@ -1,4 +1,3 @@
-import './devEnvConfig'
 import {startMongo, db} from './mongo'
 import async from 'async'
 

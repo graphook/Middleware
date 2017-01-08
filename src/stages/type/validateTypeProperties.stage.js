@@ -28,6 +28,9 @@ const objectSchema = {
         type: 'string'
       }
     },
+    default: {
+      type: 'any'
+    },
     requiresAtLeast: {
       type: 'object',
       requires: ['count', 'fields'],
@@ -56,6 +59,9 @@ const arraySchema = {
       type: 'object',
       allowOtherFields: true,
       fields: {}
+    },
+    default: {
+      type: 'any'
     }
   }
 }
@@ -68,6 +74,24 @@ const constantSchema = {
     },
     value: {
       type: 'any'
+    },
+    default: {
+      type: 'any'
+    }
+  }
+}
+const stringSchema  = {
+  type: 'object',
+  requires: ['type'],
+  fields: {
+    type: {
+      type: 'string'
+    },
+    default: {
+      type: 'any'
+    },
+    regex: {
+      type: 'string'
     }
   }
 }
@@ -77,6 +101,9 @@ const otherSchema = {
   fields: {
     type: {
       type: 'string'
+    },
+    default: {
+      type: 'any'
     }
   }
 }
@@ -102,6 +129,8 @@ export default function recursiveCheck(type, errors, path) {
     }
   } else if (type.type === 'constant') {
     validateSchema(type, constantSchema, errors, path);
+  } else if (type.type === 'string') {
+    validateSchema(type, stringSchema, errors, path);
   } else {
     validateSchema(type, otherSchema, errors, path);
   }

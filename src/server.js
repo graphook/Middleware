@@ -4,9 +4,6 @@ import path from 'path';
 import {startMongo, db} from './mongo'
 import routes from './routes.map'
 import bodyParser from 'body-parser'
-import errorHandler from './middleware/errorHandler'
-import lookupUser from './middleware/lookupUser'
-import logRequest from './middleware/logRequest'
 
 export default function startServer() {
   startMongo();
@@ -26,7 +23,6 @@ export default function startServer() {
       console.log('Error at route ', route, e);
     }
   });
-  app.use(errorHandler);
   let port = process.env.PORT || 3030;
   app.listen(port, () => {
     console.log('Application listening on ', port);
