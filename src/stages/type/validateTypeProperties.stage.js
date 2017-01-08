@@ -8,7 +8,8 @@ const validTypes = new Set([
   'number',
   'boolean',
   'any',
-  'constant'
+  'constant',
+  'id'
 ]);
 const objectSchema = {
   type: 'object',
@@ -30,6 +31,10 @@ const objectSchema = {
     },
     default: {
       type: 'any'
+    },
+    description: {
+      type: 'string',
+      default: ""
     },
     requiresAtLeast: {
       type: 'object',
@@ -60,6 +65,10 @@ const arraySchema = {
       allowOtherFields: true,
       fields: {}
     },
+    description: {
+      type: 'string',
+      default: ""
+    },
     default: {
       type: 'any'
     }
@@ -74,6 +83,10 @@ const constantSchema = {
     },
     value: {
       type: 'any'
+    },
+    description: {
+      type: 'string',
+      default: ""
     },
     default: {
       type: 'any'
@@ -90,6 +103,10 @@ const stringSchema  = {
     default: {
       type: 'any'
     },
+    description: {
+      type: 'string',
+      default: ""
+    },
     regex: {
       type: 'string'
     }
@@ -104,6 +121,10 @@ const otherSchema = {
     },
     default: {
       type: 'any'
+    },
+    description: {
+      type: 'string',
+      default: ""
     }
   }
 }

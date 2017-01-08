@@ -38,6 +38,9 @@ const requestBodyType = {
       },
       tags: {
         type: "array",
+        items: {
+          type: "string"
+        },
         default: [],
       }
     }

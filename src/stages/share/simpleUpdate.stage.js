@@ -1,13 +1,11 @@
 import {db} from '../../mongo';
 import {ObjectId} from 'mongodb';
 
-export default function(scope, collection, id, body) {
-  console.log(body);
-  console.log(id);
+export default function(scope, collection, id, body, saveTo, path) {
   return db[collection].findAndModify({ '_id': ObjectId(id) }, null, { $set: body }, { new: true }).then((result) => {
-    console.log(result)
+    result.value._id = result.value._id.toString();
+    scope[saveTo] = result.value
     scope[collection + 's'].updated.push(result.value);
-    scope.status = 200;
   }).catch((err) => {
     throw err;
   })

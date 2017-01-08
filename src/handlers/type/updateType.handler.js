@@ -24,7 +24,10 @@ const requestBodyType = {
         type: "string"
       },
       tags: {
-        type: "array"
+        type: "array",
+        items: {
+          type: "string"
+        }
       }
     }
   }

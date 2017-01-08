@@ -3,8 +3,8 @@ import {ObjectId} from 'mongodb';
 
 export default function(scope, collection, id) {
   return db[collection].findAndModify({ '_id': ObjectId(id) }, null, null, { remove: true }).then((result) => {
+    result.value._id = result.value._id.toString();
     scope[collection + 's'].deleted.push(result.value);
-    scope.status = 200;
   }).catch((err) => {
     throw err;
   })

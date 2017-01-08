@@ -57,21 +57,25 @@ export default function recursiveCheck(item, type, errors, path, parent, parentK
     }
   } else if (type.type === 'string') {
     if (typeof item !== 'string') {
-      errors[path.join('.')] = 'Should be an string but is a ' + typeof item;
+      errors[path.join('.')] = 'Should be a string but is a ' + typeof item;
     } else if (type.regex && !(new RegExp(type.regex)).test(item)) {
       errors[path.join('.')] = 'Must follow the regular expression ' + type.regex;
     }
   } else if (type.type === 'number') {
     if (typeof item !== 'number') {
-      errors[path.join('.')] = 'Should be an number but is a ' + typeof item;
+      errors[path.join('.')] = 'Should be a number but is a ' + typeof item;
     }
   } else if (type.type === 'boolean') {
     if (typeof item !== 'boolean') {
-      errors[path.join('.')] = 'Should be an boolean but is a ' + typeof item;
+      errors[path.join('.')] = 'Should be a boolean but is a ' + typeof item;
     }
   } else if (type.type === 'constant') {
     if (item !== type.value) {
       errors[path.join('.')] = 'Must be the value: ' + type.value;
+    }
+  } else if (type.type === 'id') {
+    if (typeof item !== 'string' || !(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i).test(item)) {
+      errors[path.join('.')] = item + ' is not a valid id';
     }
   } else if (type.type !== 'any') {
     errors[path.join('.')] = 'Is a type that should not exist (' + type.type + '). Use a different Zenow type.';
