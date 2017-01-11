@@ -14,41 +14,6 @@ import response from 'stages/share/response.stage';
 import handleError from 'stages/share/handleError.stage';
 import {ObjectId} from 'mongodb';
 
-const requestBodyType = {
-  title: "Create Set Type",
-  description: "The request body of a request to create a set in Zenow v1.",
-  properties: {
-    type: "object",
-    required: ["title", "type"],
-    fields: {
-      title: {
-        type: "string",
-        description: "The title of the type."
-      },
-      description: {
-        type: "string",
-        default: ""
-      },
-      tags: {
-        type: "array",
-        items: {
-          type: "string"
-        },
-        default: [],
-      },
-      type: {
-        type: "id"
-      },
-      items: {
-        type: 'array',
-        items: {
-          type: 'any'
-        }
-      }
-    }
-  }
-}
-
 module.exports = function(req, res) {
   const scope = scopeFactory(req, res);
   scope.req.body.items = scope.req.body.items || [];
