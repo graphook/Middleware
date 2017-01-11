@@ -30,7 +30,7 @@ module.exports = function(req, res) {
     .then(() => logRequest(scope))
     .then(() => validateRequest(scope.req.body, requestBodyType.properties, scope.errors, ['body']))
     .then(() => throwErrorIfNeeded(scope.errors))
-    .then(() => simpleUpdate(scope, 'user', scope.user._id, scope.req.body))
+    .then(() => simpleUpdate(scope, 'user', scope.user._id, { $set: scope.req.body }))
     .then(() => response(scope))
     .catch((err) => handleError(err, scope));
 }

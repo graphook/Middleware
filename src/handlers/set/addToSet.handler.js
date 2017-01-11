@@ -36,15 +36,15 @@ module.exports = function(req, res) {
     // Get set and type
     .then(() => Promise.all([
       simpleFind(scope, 'set', scope.req.params.setId, 'foundSet', ['params', 'setId']),
-      advancedFind(scope, 'type', { 'uses._id': scope.req.params.setId }, 'foundType', ['params', 'setId', 'type'])
+      advancedFind(scope, 'type', { 'uses._id': scope.req.params.setId }, 'foundTypes', ['params', 'setId', 'type'])
     ]))
     // Confirm the correct auth
     .then(() => checkAccess(scope, scope.foundSet._access, scope.user, 'set', scope.req.params.setId))
     // Validate the items
-    .then(() => checkItems(scope, scope.req.body, scope.foundType.properties, scope.foundType._id, ['body']))
+    .then(() => checkItems(scope, scope.req.body, scope.foundTypes[0].properties, scope.foundTypes[0]._id, ['body']))
     .then(() => throwErrorIfNeeded(scope.errors))
     // Add items to set
-    .then(() => addItemsToSet(scope, scope.req.body, scope.foundSet, scope.foundType, scope.user))
+    .then(() => addItemsToSet(scope, scope.req.body, scope.foundSet, scope.foundTypes[0], scope.user))
     .then(() => {
       scope.types.read = [];
       scope.sets.read = [];

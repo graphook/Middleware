@@ -98,8 +98,6 @@ module.exports = function(req, res) {
     ]))
     .then(() => {
       // cleanse scope
-      console.log(scope.insertedSet)
-      console.log()
       scope.types.read = [];
       scope.items.read = [];
       scope.sets.created = scope.sets.updated;

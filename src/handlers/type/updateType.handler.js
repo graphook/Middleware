@@ -42,7 +42,7 @@ module.exports = function(req, res) {
     .then(() => throwErrorIfNeeded(scope.errors))
     .then(() => simpleFind(scope, 'type', scope.req.params.typeId, 'foundType', ['params', 'typeId']))
     .then(() => checkAccess(scope, scope.foundType._access, scope.user, 'type', scope.params.typeId))
-    .then(() => simpleUpdate(scope, 'type', scope.req.params.typeId, scope.req.body))
+    .then(() => simpleUpdate(scope, 'type', scope.req.params.typeId, { $set: scope.req.body }))
     .then(() => response(scope))
     .catch((err) => handleError(err, scope));
 }

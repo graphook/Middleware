@@ -23,6 +23,9 @@ export default function startServer() {
       console.log('Error at route ', route, e);
     }
   });
+  if (process.env.ENV !== 'prod') {
+    app.get('/test', require('./handlers/test.handler.js'));
+  }
   let port = process.env.PORT || 3030;
   app.listen(port, () => {
     console.log('Application listening on ', port);
