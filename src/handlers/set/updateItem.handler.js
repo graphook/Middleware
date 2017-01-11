@@ -1,6 +1,10 @@
-import {db} from '../../mongo';
-import {ObjectId} from 'mongodb';
+import notImplemented from 'stages/share/notImplemented.stage';
 
+module.exports = function(req, res) {
+  notImplemented(req, res);
+}
+
+/*
 module.exports = function(req, res, next) {
   if (!req.user) {
     next({
@@ -53,3 +57,4 @@ module.exports = function(req, res, next) {
     });
   }
 }
+*/

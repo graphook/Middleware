@@ -1,7 +1,10 @@
-import {db} from '../../mongo'
-import {ObjectId} from 'mongodb'
-import async from 'async'
+import notImplemented from 'stages/share/notImplemented.stage';
 
+module.exports = function(req, res) {
+  notImplemented(req, res);
+}
+
+/*
 module.exports = function(req, res, next) {
   let set = req.body;
   if (!req.user) {
@@ -70,3 +73,4 @@ module.exports = function(req, res, next) {
     });
   }
 }
+*/
