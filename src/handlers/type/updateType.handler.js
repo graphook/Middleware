@@ -40,34 +40,9 @@ module.exports = function(req, res) {
     .then(() => validateRequest(scope.req.body, requestBodyType.properties, scope.errors, ['body']))
     .then(() => checkMongoIds(scope, { 'params.typeId': scope.req.params.typeId }))
     .then(() => throwErrorIfNeeded(scope.errors))
+    .then(() => simpleFind(scope, 'type', scope.req.params.typeId, 'foundType', ['params', 'typeId']))
+    .then(() => checkAccess(scope, scope.foundType._access, scope.user, 'type', scope.params.typeId))
     .then(() => simpleUpdate(scope, 'type', scope.req.params.typeId, scope.req.body))
     .then(() => response(scope))
     .catch((err) => handleError(err, scope));
 }
-
-
-/*
-module.exports = function(req, res, next) {
-  if (!req.user) {
-    next({
-      user: true,
-      status: 401,
-      message: "Access denied."
-    });
-  } else {
-    let update = {
-      title: req.body.title,
-      description: req.body.description,
-      tags: req.body.tags
-    }
-    db.type.update({ '_id': ObjectID(req.params.id) }, {
-      $set: update
-    }, (err, result) => {
-      if (err) { next(err) }
-      else {
-        res.status(200).send(result);
-      }
-    })
-  }
-}
-*/

@@ -1,7 +1,6 @@
 import Promise from 'bluebird';
 import scopeFactory from 'stages/util/scopeFactory';
 import checkIfUserOrClient from 'stages/share/checkIfUserOrClient.stage';
-import logRequest from 'stages/share/logRequest.stage';
 import validateRequest from 'stages/share/validateSchema.stage';
 import throwErrorIfNeeded from 'stages/share/throwErrorIfNeeded.stage';
 import checkIfDuplicateUser from 'stages/user/checkIfDuplicateUser.stage';
@@ -39,7 +38,6 @@ module.exports = function(req, res) {
   const errors = {};
   const scope = scopeFactory(req, res);
   Promise.try(() => checkIfUserOrClient(scope))
-    .then(() => logRequest(scope))
     .then(() => validateRequest(scope.req.body, requestBodyType.properties, scope.errors, ['body']))
     .then(() => throwErrorIfNeeded(scope.errors))
     .then(() => checkIfDuplicateUser(scope.req.body, scope.errors))

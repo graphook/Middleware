@@ -55,7 +55,13 @@ module.exports = function(req, res) {
     .then(() => throwErrorIfNeeded(scope.errors))
     .then(() => validateTypeProperties(scope.req.body.properties, scope.errors, ['body']))
     .then(() => throwErrorIfNeeded(scope.errors))
-    .then(() => simpleInsert(scope, 'type', Object.assign(scope.req.body, { uses: [], numUses: 0 })))
+    .then(() => simpleInsert(scope, 'type', Object.assign(scope.req.body, {
+      uses: [],
+      numUses: 0,
+      _access: {
+        creator: scope.user._id
+      }
+     })))
     .then(() => response(scope))
     .catch((err) => handleError(err, scope));
 }

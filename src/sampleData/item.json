@@ -27,15 +27,18 @@
 		"people": [
 			{
 				"firstName": "Timmy",
-				"age": 10
+				"age": 10,
+				"isParent": false
 			},
 			{
 				"firstName": "Dad",
-				"age": 42
+				"age": 42,
+				"isParent": true
 			},
 			{
 				"firstName": "Mom",
-				"age": 40
+				"age": 40,
+				"isParent": true
 			}
 		],
 		"lives": [
@@ -47,7 +50,8 @@
 		"people": [
 			{
 				"firstName": "Aang",
-				"age": 12
+				"age": 12,
+				"isParent": false
 			},
 			{
 				"firstName": "Zuko",
@@ -55,15 +59,18 @@
 			},
 			{
 				"firstName": "Katara",
-				"age": 14
+				"age": 14,
+				"isParent": false
 			},
 			{
 				"firstName": "Sokka",
-				"age": 15
+				"age": 15,
+				"isParent": false
 			},
 			{
 				"firstName": "Toph",
-				"age": 12
+				"age": 12,
+				"isParent": false
 			}
 		],
 		"lives": [

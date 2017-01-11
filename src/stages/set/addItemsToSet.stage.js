@@ -19,9 +19,8 @@ export default function(scope, items, set, type, user) {
           _id: set._id,
           _title: set.title
         }],
-        _creator: {
-          _id: user._id,
-          username: user.username
+        _access: {
+          creator: user._id
         }
       })),
       'addItemsToSetItemsCreated'

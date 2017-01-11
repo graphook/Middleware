@@ -1,7 +1,6 @@
 import Promise from 'bluebird';
 import scopeFactory from 'stages/util/scopeFactory'
 import checkIfUser from 'stages/share/checkIfUser.stage'
-import logRequest from 'stages/share/logRequest.stage'
 import validateRequest from 'stages/share/validateSchema.stage';
 import throwErrorIfNeeded from 'stages/share/throwErrorIfNeeded.stage';
 import updatePassword from 'stages/user/updatePassword.stage';
@@ -33,7 +32,6 @@ const requestBodyType = {
 module.exports = function(req, res) {
   const scope = scopeFactory(req, res);
   Promise.try(() => checkIfUser(scope))
-    .then(() => logRequest(scope))
     .then(() => validateRequest(scope.req.body, requestBodyType.properties, scope.errors, ['body']))
     .then(() => throwErrorIfNeeded(scope.errors))
     .then(() => updatePassword(scope, scope.req.body))

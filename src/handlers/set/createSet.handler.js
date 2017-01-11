@@ -9,9 +9,9 @@ import simpleFind from 'stages/share/simpleFind.stage';
 import simpleInsert from 'stages/share/simpleInsert.stage';
 import checkItems from 'stages/set/checkItems.stage';
 import addItemsToSet from 'stages/set/addItemsToSet.stage';
+import advancedUpdate from 'stages/share/advancedUpdate.stage';
 import response from 'stages/share/response.stage';
 import handleError from 'stages/share/handleError.stage';
-import {db} from '../../mongo';
 import {ObjectId} from 'mongodb';
 
 const requestBodyType = {
@@ -75,27 +75,31 @@ module.exports = function(req, res) {
         _id: scope.user._id,
         username: scope.user.username
       },
+      _access: {
+        creator: scope.user._id
+      },
       stars: 0,
       items: []
-    }, 'insertedSet'))
+    }, 'insertedSets'))
     // create and update items
     .then(() => Promise.all([
-      addItemsToSet(scope, scope.req.body.items, scope.insertedSet[0], scope.foundType, scope.user),
-      db.type.update({ '_id': ObjectId(scope.foundType._id) }, {
+      addItemsToSet(scope, scope.req.body.items, scope.insertedSets[0], scope.foundType, scope.user),
+      advancedUpdate(scope, 'type', { '_id': ObjectId(scope.foundType._id) }, {
         $push: {
           uses: {
-            _id: scope.insertedSet._id,
-            title: scope.insertedSet.title
+            _id: scope.insertedSets[0]._id,
+            title: scope.insertedSets[0].title
           }
         },
         $inc: {
           numUses: 1
         }
-      })
+      }, 'updatedTypes', ['type'])
     ]))
-    // update set
     .then(() => {
       // cleanse scope
+      console.log(scope.insertedSet)
+      console.log()
       scope.types.read = [];
       scope.items.read = [];
       scope.sets.created = scope.sets.updated;

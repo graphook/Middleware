@@ -15,7 +15,7 @@ module.exports = function(req, res) {
     .then(() => logRequest(scope))
     .then(() => checkMongoIds(scope, { 'params.typeId': scope.req.params.typeId }))
     .then(() => throwErrorIfNeeded(scope.errors))
-    .then(() => simpleFind(scope, 'type', scope.req.params.typeId))
+    .then(() => simpleFind(scope, 'type', scope.req.params.typeId), null, ['params', 'typeId'])
     .then(() => response(scope))
     .catch((err) => handleError(err, scope));
 }
