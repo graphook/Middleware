@@ -4,7 +4,7 @@
   "description": "The middleware for Zenow",
   "main": "index.js",
   "scripts": {
-    "start": "node ./build/index.js",
+    "start": "better-npm-run start",
     "build": "babel src --out-dir build",
     "dev": "better-npm-run dev",
     "test": "mocha \"src/**/*.spec.js\" --compilers js:babel-register",
@@ -13,6 +13,12 @@
     "init": "better-npm-run init"
   },
   "betterScripts": {
+    "start": {
+      "command": "node ./build/index.js",
+      "env": {
+        "NODE_PATH": "./build"
+      }
+    },
     "dev": {
       "command": "babel-watch src/index.js",
       "env": {
