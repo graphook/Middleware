@@ -1,47 +1,42 @@
-import {db} from '../../mongo'
-import {ObjectId} from 'mongodb'
-import async from 'async'
+import Promise from 'bluebird';
+import scopeFactory from 'stages/util/scopeFactory'
+import checkIfUser from 'stages/share/checkIfUser.stage'
+import logRequest from 'stages/share/logRequest.stage'
+import throwErrorIfNeeded from 'stages/share/throwErrorIfNeeded.stage';
+import checkMongoIds from 'stages/share/checkMongoIds.stage';
+import checkAccess from 'stages/share/checkAccess.stage';
+import simpleFind from 'stages/share/simpleFind.stage';
+import simpleRemove from 'stages/share/simpleRemove.stage';
+import simpleUpdate from 'stages/share/simpleUpdate.stage';
+import response from 'stages/share/response.stage';
+import handleError from 'stages/share/handleError.stage';
+import {ObjectId} from 'mongodb';
 
-module.exports = function(req, res, next) {
-  if (!req.user) {
-    next({
-      user: true,
-      status: 401,
-      message: "Access denied."
-    });
-  } else {
-    // check if this set has been starred by this user
-    db.user.findOne({ _id: ObjectId(req.user._id), stars: req.params.id }, (err, user) => {
-      if (err) { next(err) }
-      else if (!user) {
-        next({
-          user: true,
-          status: 400,
-          message: "The user has not yet starred this set."
-        });
-      } else {
-        async.parallel({
-          set: (cb) => {
-            // decrement stars on this set
-            db.set.update({ _id: ObjectId(req.params.id) }, {
-              $inc: {
-                stars: -1
-              }
-            }, cb)
-          },
-          user: (cb) => {
-            // remove this set to the sets that are starred by this user
-            db.user.update({ _id: ObjectId(req.user._id) }, {
-              $pull: {
-                stars: req.params.id
-              }
-            }, cb)
-          }
-        }, (err) => {
-          if (err) { next(err) }
-          res.send()
-        });
+
+module.exports = function(req, res) {
+  const scope = scopeFactory(req, res);
+  Promise.try(() => checkIfUser(scope))
+    .then(() => logRequest(scope))
+    .then(() => checkMongoIds(scope, { 'params.setId': scope.req.params.setId }))
+    .then(() => {
+      if (!new Set(scope.user.stars).has(scope.req.params.setId)) {
+        scope.errors['user'] = "User has not yet starred this set."
       }
-    });
-  }
+    })
+    .then(() => throwErrorIfNeeded(scope.errors))
+    .then(() => Promise.all([
+      simpleUpdate(scope, 'set', scope.req.params.setId, {
+        $inc: {
+          stars: -1
+        }
+      }, 'updatedSet', ['set']),
+      simpleUpdate(scope, 'user', scope.user._id, {
+        $pull: {
+          stars: scope.req.params.setId
+        }
+      }, 'updatedUser', ['user'])
+    ]))
+    .then(() => throwErrorIfNeeded(scope.errors))
+    .then(() => response(scope))
+    .catch((err) => handleError(err, scope));
 }
