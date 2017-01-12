@@ -52,7 +52,7 @@ const routes = [
   },
   {
     method: 'delete',
-    path: '/v1/set/:setId/item',
+    path: '/v1/set/:setId/item/:itemId',
     handler: require('./handlers/set/removeFromSet.handler')
   },
   {
