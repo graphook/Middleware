@@ -1,32 +1,36 @@
-import {db} from '../../mongo'
-import validateObjectId from '../../validators/objectId.validator';
-import cleanseMongoQuery from './util/cleanseMongoQuery';
+import Promise from 'bluebird';
+import scopeFactory from 'stages/util/scopeFactory'
+import checkIfUser from 'stages/share/checkIfUser.stage'
+import logRequest from 'stages/share/logRequest.stage'
+import throwErrorIfNeeded from 'stages/share/throwErrorIfNeeded.stage';
+import validateRequest from 'stages/share/validateSchema.stage';
+import cleanseMongoQuery from 'stages/share/cleanseMongoQuery.stage';
+import checkMongoIds from 'stages/share/checkMongoIds.stage';
+import advancedFind from 'stages/share/advancedFind.stage';
+import response from 'stages/share/response.stage';
+import handleError from 'stages/share/handleError.stage';
+import {ObjectId} from 'mongodb';
 
-module.exports = function(req, res, next) {
-  // pass the search query to a find function
-  if (!req.user) {
-    next({
-      user: true,
-      status: 401,
-      message: "Access denied."
-    });
-  } else {
-    try {
-      let query = cleanseMongoQuery(req.body || {});
-      const count = parseInt(req.query.count) || 10;
-      const page = parseInt(req.query.page) || 0;
-      db.set.find(query).skip(count * page).limit(count).toArray((err, result) => {
-        if (err) { next(err) }
-        else {
-          res.send(result)
-        }
-      });
-    } catch(e) {
-      next({
-        user: true,
-        status: 400,
-        message: 'Error: ' + e
-      });
-    }
+const requestBodyType = {
+  title: "Search Type",
+  description: "The request body of a request to search in Zenow v1.",
+  properties: {
+    type: "object",
+    fields: {},
+    allowOtherFields: true
   }
+}
+
+// TODO: add pagination
+module.exports = function(req, res) {
+  const scope = scopeFactory(req, res);
+  Promise.try(() => checkIfUser(scope))
+    .then(() => logRequest(scope))
+    .then(() => validateRequest(scope.req.body, requestBodyType.properties, scope.errors, ['body']))
+    .then(() => cleanseMongoQuery(scope.req.body))
+    .then(() => throwErrorIfNeeded(scope.errors))
+    .then(() => advancedFind(scope, 'set', scope.req.body, 'foundSet', ['set']))
+    .then(() => throwErrorIfNeeded(scope.errors))
+    .then(() => response(scope))
+    .catch((err) => handleError(err, scope));
 }
