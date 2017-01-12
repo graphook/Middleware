@@ -4,14 +4,16 @@ import checkIfUser from 'stages/share/checkIfUser.stage'
 import logRequest from 'stages/share/logRequest.stage'
 import validateRequest from 'stages/share/validateSchema.stage';
 import checkMongoIds from 'stages/share/checkMongoIds.stage';
+import checkAccess from 'stages/share/checkAccess.stage';
 import throwErrorIfNeeded from 'stages/share/throwErrorIfNeeded.stage';
 import simpleUpdate from 'stages/share/simpleUpdate.stage';
+import simpleFind from 'stages/share/simpleFind.stage';
 import response from 'stages/share/response.stage';
 import handleError from 'stages/share/handleError.stage';
 
 
 const requestBodyType = {
-  title: "Update Type Request",
+  title: "Update type Request",
   description: "The request body of a request to update a type in Zenow v1.",
   properties: {
     type: "object",
@@ -40,8 +42,8 @@ module.exports = function(req, res) {
     .then(() => validateRequest(scope.req.body, requestBodyType.properties, scope.errors, ['body']))
     .then(() => checkMongoIds(scope, { 'params.typeId': scope.req.params.typeId }))
     .then(() => throwErrorIfNeeded(scope.errors))
-    .then(() => simpleFind(scope, 'type', scope.req.params.typeId, 'foundType', ['params', 'typeId']))
-    .then(() => checkAccess(scope, scope.foundType._access, scope.user, 'type', scope.params.typeId))
+    .then(() => simpleFind(scope, 'type', scope.req.params.typeId, 'foundtype', ['params', 'typeId']))
+    .then(() => checkAccess(scope, scope.foundtype._access, scope.user, 'type', scope.req.params.typeId))
     .then(() => simpleUpdate(scope, 'type', scope.req.params.typeId, { $set: scope.req.body }))
     .then(() => response(scope))
     .catch((err) => handleError(err, scope));
