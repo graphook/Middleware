@@ -1,8 +1,14 @@
 import {db} from '../../mongo';
 import {ObjectId} from 'mongodb';
 
-export default function(scope, collection, find, saveTo, path) {
-  return db[collection].find(find).toArray().then((result) => {
+export default function(scope, collection, find, saveTo, path, params) {
+  let findQuery = db[collection].find(find)
+  if (params && params.count) {
+    const count = parseInt(params.count);
+    const page = (params.page) ? parseInt(params.page) : 0;
+    findQuery = findQuery.skip(count * page).limit(count);
+  }
+  return findQuery.toArray().then((result) => {
     if (result.length === 0) {
       scope.errors[path.join('.')] = 'Could not find any matching ' + collection + 's.';
     } else {

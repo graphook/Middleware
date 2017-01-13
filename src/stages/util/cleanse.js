@@ -7,12 +7,15 @@ const cleansers = {
     return user;
   },
   types: (type) => {
+    delete type._access;
     return type;
   },
   sets: (set) => {
+    delete set._access;
     return set;
   },
   items: (item) => {
+    delete item._access;
     return item;
   }
 }

@@ -13,7 +13,7 @@ const validTypes = new Set([
 ]);
 const objectSchema = {
   type: 'object',
-  requires: ['type', 'fields'],
+  requires: ['type'],
   fields: {
     type: {
       type: 'string'
@@ -21,13 +21,15 @@ const objectSchema = {
     fields: {
       type: 'object',
       allowOtherFields: true,
-      fields: {}
+      fields: {},
+      default: {},
     },
     requires: {
       type: 'array',
       items: {
         type: 'string'
-      }
+      },
+      default: []
     },
     default: {
       type: 'any'
@@ -55,7 +57,7 @@ const objectSchema = {
 }
 const arraySchema = {
   type: 'object',
-  requires: ['type', 'items'],
+  requires: ['type'],
   fields: {
     type: {
       type: 'string'
@@ -63,7 +65,10 @@ const arraySchema = {
     items: {
       type: 'object',
       allowOtherFields: true,
-      fields: {}
+      fields: {},
+      default: {
+        type: 'any'
+      }
     },
     description: {
       type: 'string',

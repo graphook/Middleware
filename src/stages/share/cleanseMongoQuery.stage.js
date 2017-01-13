@@ -6,17 +6,15 @@ const validateObjectId = (id) => {
 
 const objectIdFormat = (obj) => {
   if (typeof obj === 'object' && !Array.isArray(obj)) {
-    let newObj = {};
     Object.keys(obj).forEach((key) => {
-      newObj[key] = objectIdFormat(obj[key]);
+      obj[key] = objectIdFormat(obj[key]);
     });
-    return newObj
+    return obj
   } else if (typeof obj === 'object' && Array.isArray(obj)) {
-    let newArr = [];
     obj.forEach((arrObj, index) => {
-      newArr[index] = objectIdFormat(arrObj);
+      obj[index] = objectIdFormat(arrObj);
     });
-    return newArr;
+    return obj;
   } else if (validateObjectId(obj)) {
     return ObjectId(obj);
   } else {
@@ -26,21 +24,19 @@ const objectIdFormat = (obj) => {
 
 export default function cleanseMongoQuery(obj) {
   if (typeof obj === 'object' && !Array.isArray(obj)) {
-    let newObj = {};
     Object.keys(obj).forEach((key) => {
       if (key === '_id') {
-        newObj[key] = objectIdFormat(obj[key]);
+        obj[key] = objectIdFormat(obj[key]);
       } else {
-        newObj[key] = cleanseMongoQuery(obj[key]);
+        obj[key] = cleanseMongoQuery(obj[key]);
       }
     });
-    return newObj
+    return obj;
   } else if (typeof obj === 'object' && Array.isArray(obj)) {
-    let newArr = [];
     obj.forEach((arrObj, index) => {
-      newArr[index] = cleanseMongoQuery(arrObj);
+      obj[index] = cleanseMongoQuery(arrObj);
     });
-    return newArr;
+    return obj;
   } else {
     return obj;
   }

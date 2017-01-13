@@ -21,7 +21,7 @@ export default function(scope) {
       accessMethod: 'client'
     }
   } else if (token) {
-    db.user.findOne({ tokens: token }).then((user) => {
+    return db.user.findOne({ tokens: token }).then((user) => {
       if (!user) {
         scope.errors.auth = token + ' is not a valid token.';
         throw scope;

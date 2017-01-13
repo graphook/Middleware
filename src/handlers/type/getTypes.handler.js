@@ -9,6 +9,7 @@ import simpleFind from 'stages/share/simpleFind.stage';
 import response from 'stages/share/response.stage';
 import handleError from 'stages/share/handleError.stage';
 import {db} from '../../mongo';
+import constants from 'constants';
 
 const requestQuery = {
   title: "Create Type Request",
@@ -17,12 +18,14 @@ const requestQuery = {
     type: 'object',
     fields: {
       count: {
-        type: 'number',
-        default: '10'
+        type: 'string',
+        default: '10',
+        regex: constants.numberRegex
       },
       page: {
         type: 'string',
-        default: '0'
+        default: '0',
+        regex: constants.numberRegex
       },
       q: {
         type: 'string'
@@ -46,6 +49,7 @@ module.exports = function(req, res) {
       const page = parseInt(scope.req.query.page);
       const count = parseInt(scope.req.query.count);
       return db.type.find(query).sort({ numUses: -1 }).skip(count * page).limit(count).toArray().then((result) => {
+        if (scope.types.read.length === 0) result.push(null) 
         scope.types.read = scope.types.read.concat(result);
       }).catch((err) => {
         throw err;

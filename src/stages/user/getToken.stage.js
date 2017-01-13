@@ -12,7 +12,7 @@ export default function(scope) {
       throw scope;
     }
     const token = uuid.v4();
-    return db.user.update({'_id': ObjectID(user._id)}, {
+    return db.user.update({'_id': user._id}, {
       $push: {
         tokens: token
       }

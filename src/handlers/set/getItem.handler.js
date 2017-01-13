@@ -1,6 +1,6 @@
 import Promise from 'bluebird';
 import scopeFactory from 'stages/util/scopeFactory'
-import checkIfUser from 'stages/share/checkIfUser.stage'
+import checkIfUserOrClient from 'stages/share/checkIfUserOrClient.stage'
 import logRequest from 'stages/share/logRequest.stage'
 import checkMongoIds from 'stages/share/checkMongoIds.stage';
 import throwErrorIfNeeded from 'stages/share/throwErrorIfNeeded.stage';
@@ -10,7 +10,7 @@ import handleError from 'stages/share/handleError.stage';
 
 module.exports = function(req, res) {
   const scope = scopeFactory(req, res);
-  Promise.try(() => checkIfUser(scope))
+  Promise.try(() => checkIfUserOrClient(scope))
     .then(() => logRequest(scope))
     .then(() => checkMongoIds(scope, { 'params.setId': scope.req.params.setId, 'params.itemId': scope.req.params.itemId }))
     .then(() => throwErrorIfNeeded(scope.errors))
