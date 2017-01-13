@@ -32,7 +32,6 @@ export default function(scope, collection, find, update, saveTo, path) {
 
   return db[collection].find(find).toArray().then((result) => {
     if (result.length === 0) {
-      console.log('is empty')
       scope.errors[path.join('.')] = 'Could not find any matching ' + collection + 's.'
       throw {};
     }
@@ -40,13 +39,11 @@ export default function(scope, collection, find, update, saveTo, path) {
     result.forEach((item) => {
       subScope.old[item._id.toString()] = Object.assign(item, { _id: item._id.toString() });
     })
-    console.log(subScope);
   })
   .then(() => db[collection].update(find, update, {multi: true}))
   .then(() => db[collection].find({ '_id': { $in: Object.keys(subScope.old).map(id => ObjectId(id)) } }, update).toArray())
   .then((result) => {
     // check if the new ones are valid
-    console.log(result);
   })
   .catch((err) => {
     if (err) {

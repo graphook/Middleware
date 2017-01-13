@@ -7,6 +7,7 @@ import throwErrorIfNeeded from 'stages/share/throwErrorIfNeeded.stage';
 import simpleUpdate from 'stages/share/simpleUpdate.stage';
 import response from 'stages/share/response.stage';
 import handleError from 'stages/share/handleError.stage';
+import constants from 'constants';
 
 
 const requestBodyType = {
@@ -18,7 +19,7 @@ const requestBodyType = {
       email: {
         type: "string",
         description: "The user's new email",
-        regex: "^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,4}$"
+        regex: constants.emailRegex
       }
     }
   }

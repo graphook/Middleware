@@ -24,7 +24,6 @@ module.exports = function(req, res) {
     // get set
     .then(() => simpleFind(scope, 'set', scope.req.params.setId, 'foundSet', ['params', 'typeId']))
     .then(() => throwErrorIfNeeded(scope.errors))
-    .then(() => { console.log(scope.foundSet) })
     // check Access
     .then(() => Promise.all([
       // find and delete all items only a part of this set

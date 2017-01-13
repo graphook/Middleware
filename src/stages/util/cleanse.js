@@ -1,6 +1,7 @@
 
 const cleansers = {
   users: (user) => {
+    // REMEMBER TO UPDATE THE CLEANSE IN getToken.stage.js
     delete user.password;
     delete user.tokens;
     return user;

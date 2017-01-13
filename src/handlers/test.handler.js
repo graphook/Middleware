@@ -14,9 +14,6 @@ module.exports = function(req, res) {
   const scope = scopeFactory(req, res);
   Promise.try(() => checkIfUserOrClient(scope))
     .then(() => advancedRemove(scope, 'item', { surname: 'Turner' }, 'removed', ['body']))
-    .then(() => {
-      console.log(scope.removed);
-    })
     .then(() => response(scope))
     .catch((err) => handleError(err, scope));
 }

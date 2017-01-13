@@ -6,6 +6,7 @@ import throwErrorIfNeeded from 'stages/share/throwErrorIfNeeded.stage';
 import checkIfDuplicateUser from 'stages/user/checkIfDuplicateUser.stage';
 import response from 'stages/share/response.stage';
 import handleError from 'stages/share/handleError.stage';
+import constants from 'constants';
 
 
 const requestBodyType = {
@@ -18,17 +19,17 @@ const requestBodyType = {
       username: {
         type: "string",
         description: "The name of the user. This will be public on Zenow. Usernames must consist of letters, numbers, -, or _ and be between 3 and 30 characters in length.",
-        regex: "^[a-zA-Z0-9\\-_]{3,30}$"
+        regex: constants.usernameRegex
       },
       email: {
         type: "string",
         description: "The user's email",
-        regex: "^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,4}$"
+        regex: constants.emailRegex
       },
       password: {
         type: "string",
         description: "The user's password. Passwords must consist of letters, numbers, or one of these symbols: $-/:-?{-~!\"^_`[]",
-        regex: "^[a-zA-Z0-9$-/:-?{-~!\"^_`\\[\\]]"
+        regex: constants.passwordRegex
       }
     }
   }
@@ -39,7 +40,6 @@ module.exports = function(req, res) {
   const scope = scopeFactory(req, res);
   Promise.try(() => checkIfUserOrClient(scope))
     .then(() => validateRequest(scope.req.body, requestBodyType.properties, scope.errors, ['body']))
-    .then(() => throwErrorIfNeeded(scope.errors))
     .then(() => checkIfDuplicateUser(scope.req.body, scope.errors))
     .then(() => throwErrorIfNeeded(scope.errors))
     .then(() => response(scope))

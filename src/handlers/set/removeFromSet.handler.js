@@ -37,8 +37,6 @@ module.exports = function(req, res) {
           $pull: { items: scope.req.params.itemId }
         }, 'updatedSet', ['set'])
       ];
-      console.log(scope.foundItem._sets);
-      console.log(scope.foundItem._sets.length);
       if (scope.foundItem._sets.length > 1) {
         promises.push(simpleUpdate(scope, 'item', scope.req.params.itemId, {
           $pull: { _sets: { _id: scope.req.params.setId } }

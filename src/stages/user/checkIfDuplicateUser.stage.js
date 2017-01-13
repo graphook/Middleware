@@ -13,7 +13,7 @@ export default function(body, errors) {
           errors['body.username'] = 'username already used';
         }
         if (user.email === body.email) {
-          errors['body.password'] = 'email already used';
+          errors['body.email'] = 'email already used';
         }
       });
     }

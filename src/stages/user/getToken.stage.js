@@ -17,13 +17,11 @@ export default function(scope) {
         tokens: token
       }
     }).then(() => {
+      delete user.password
+      delete user.tokens
       scope.auth = {
         token: token,
-        user: {
-          username: user.username,
-          email: user.email,
-          password: user.password
-        }
+        user: user
       }
     }).catch((err) => {
       throw err;
