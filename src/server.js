@@ -10,8 +10,8 @@ export default function startServer() {
   let app = express();
   if (process.env.ENV === 'prod') {
     app.use((req, res, next) => {
-      if (req.header['x-forwarded-proto'] !== 'https') {
-        res.redirect('https://' + req.header.host + req.url);
+      if (req.get('x-forwarded-proto') !== 'https') {
+        res.redirect('https://' + req.hostname + req.originalUrl);
       } else
         next()
     });
