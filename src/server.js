@@ -9,6 +9,11 @@ export default function startServer() {
   startMongo();
   let app = express();
   app.use(bodyParser.json());
+  app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  })
   routes.forEach((route) => {
     try {
       if (route.middleware) {
@@ -26,6 +31,14 @@ export default function startServer() {
   if (process.env.ENV !== 'prod') {
     app.get('/test', require('./handlers/test.handler.js'));
   }
+  app.use(function (req, res, next) {
+    res.status(404).send({
+      status: 404,
+      errors: {
+        'path': req.path + ' is not a valid path.'
+      }
+    })
+  })
   let port = process.env.PORT || 3030;
   app.listen(port, () => {
     console.log('Application listening on ', port);

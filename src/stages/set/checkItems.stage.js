@@ -16,7 +16,7 @@ export default function(scope, items, type, typeId, path) {
     });
     return db.item.find({
       '_id': { $in: idItems.map(id => ObjectId(id)) },
-      '_type': typeId
+      '_type._id': typeId
     }).toArray().then((result) => {
       scope.items.read = scope.items.read.concat(result);
       const resultIds = new Set(result.map(item => item._id.toString()));

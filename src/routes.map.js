@@ -31,6 +31,11 @@ const routes = [
     handler: require('./handlers/set/getItem.handler')
   },
   {
+    method: 'get',
+    path: '/v1/set/:setId/item',
+    handler: require('./handlers/set/getItems.handler')
+  },
+  {
     method: 'post',
     path: '/v1/set',
     handler: require('./handlers/set/createSet.handler')

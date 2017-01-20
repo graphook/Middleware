@@ -13,6 +13,7 @@ export default function(scope) {
       scope.user = user;
       scope.user._id = scope.user._id.toString();
       scope.user.accessMethod = 'apikey';
+      delete scope.req.query.apikey;
     }).catch((err) => {
       throw err;
     });

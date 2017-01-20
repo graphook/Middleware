@@ -29,8 +29,10 @@ export default function(scope, items, set, type, user) {
   if (idItems.length > 0) {
     promises.push(db.item.update({ '_id': { $in: idItems.map(itemId => ObjectId(itemId)) } }, {
         $push: {
-          _sets: set._id,
-          _setTitles: set.title
+          _sets: {
+            _id: set._id,
+            title: set.title
+          }
         }
       }).then(() => {
         db.item.find({ '_id': { $in: idItems.map(itemId => ObjectId(itemId)) } }).toArray().then((result) => {

@@ -38,6 +38,10 @@ const objectSchema = {
       type: 'string',
       default: ""
     },
+    allowOtherFields: {
+      type: 'boolean',
+      default: false
+    },
     requiresAtLeast: {
       type: 'object',
       requires: ['count', 'fields'],
