@@ -41,7 +41,7 @@ module.exports = function(req, res) {
     .then(() => {
       const page = parseInt(scope.req.query.page);
       const count = parseInt(scope.req.query.count);
-      return db.item.find({ '_set._id': scope.req.params.setId }).skip(count * page).limit(count).toArray().then((result) => {
+      return db.item.find({ '_sets._id': scope.req.params.setId }).skip(count * page).limit(count).toArray().then((result) => {
         if (scope.items.read.length === 0) result.push(null)
         scope.items.read = scope.items.read.concat(result);
       }).catch((err) => {

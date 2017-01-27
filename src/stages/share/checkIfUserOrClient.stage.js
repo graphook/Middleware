@@ -34,7 +34,7 @@ export default function(scope) {
       throw err;
     });
   } else {
-    scope.status = 401;
+    scope.status = 403;
     scope.errors.auth = 'Must provide an apikey, or access via the website.'
     throw scope;
   }

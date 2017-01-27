@@ -18,7 +18,7 @@ export default function(scope) {
       throw err;
     });
   } else if (token && token === process.env.CLIENT_SECRET) {
-    scope.status = 401;
+    scope.status = 403;
     scope.errors.auth = 'Must log in to the website.'
     throw scope;
   } else if (token) {
@@ -34,7 +34,7 @@ export default function(scope) {
       throw err;
     });
   } else {
-    scope.status = 401;
+    scope.status = 403;
     scope.errors.auth = 'Must provide an apikey, or access via the website.'
     throw scope;
   }

@@ -7,7 +7,7 @@ export default function(scope) {
   const body = scope.req.body;
   return db.user.findOne({ $or: [{ username: body.username }, { email: body.email }] }).then((user) => {
     if (!user || !bcrypt.compareSync(body.password, user.password)) {
-      scope.status = 401;
+      scope.status = 403;
       scope.errors['auth'] = 'username / email and password do not match'
       throw scope;
     }
