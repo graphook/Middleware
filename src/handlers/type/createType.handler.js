@@ -49,7 +49,6 @@ const requestBodyType = {
 
 module.exports = function(req, res) {
   const scope = scopeFactory(req, res);
-  console.log('iv been called')
   Promise.try(() => checkIfUser(scope))
     .then(() => logRequest(scope))
     .then(() => validateRequest(scope.req.body, requestBodyType.properties, scope.errors, ['body']))
