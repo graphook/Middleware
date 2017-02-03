@@ -18,6 +18,11 @@ export default function startServer() {
   }*/
 
   app.use(bodyParser.json());
+
+  app.use((req, res) => {
+    console.log(req.url, req.body);
+  })
+
   app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header('Access-Control-Allow-Methods', 'OPTIONS, HEAD, GET, POST, PUT, DELETE');
