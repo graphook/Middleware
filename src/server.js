@@ -19,8 +19,9 @@ export default function startServer() {
 
   app.use(bodyParser.json());
 
-  app.use((req, res) => {
+  app.use((req, res, next) => {
     console.log(req.url, req.body);
+    next();
   })
 
   app.use((req, res, next) => {
