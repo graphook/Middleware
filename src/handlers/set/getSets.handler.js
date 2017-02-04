@@ -49,8 +49,8 @@ module.exports = function(req, res) {
       } : {};
       const page = parseInt(scope.req.query.page);
       const count = parseInt(scope.req.query.count);
-      return db.set.find(query).sort({ numUses: -1 }).skip(count * page).limit(count).toArray().then((result) => {
-        if (scope.sets.read.length === 0) result.push(null) 
+      return db.set.find(query).sort({ stars: -1 }).skip(count * page).limit(count).toArray().then((result) => {
+        if (scope.sets.read.length === 0) result.push(null)
         scope.sets.read = scope.sets.read.concat(result);
       }).catch((err) => {
         throw err;

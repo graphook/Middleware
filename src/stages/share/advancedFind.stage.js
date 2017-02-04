@@ -8,6 +8,9 @@ export default function(scope, collection, find, saveTo, path, params) {
     const page = (params.page) ? parseInt(params.page) : 0;
     findQuery = findQuery.skip(count * page).limit(count);
   }
+  if (params && params.sort) {
+    findQuery = findQuery.sort(params.sort);
+  }
   return findQuery.toArray().then((result) => {
     if (result.length === 0) {
       scope.errors[path.join('.')] = 'Could not find any matching ' + collection + 's.';
