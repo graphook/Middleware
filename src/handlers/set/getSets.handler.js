@@ -51,7 +51,9 @@ module.exports = function(req, res) {
       const count = parseInt(scope.req.query.count);
       return db.set.find(query).sort({ stars: -1 }).skip(count * page).limit(count).toArray().then((result) => {
         if (scope.sets.read.length === 0) result.push(null)
-        scope.sets.read = scope.sets.read.concat(result);
+        scope.sets.read = result.filter((set) => {
+          return !(set._access.private && scope.user._id !== set._access.creator)
+        });
       }).catch((err) => {
         throw err;
       })
