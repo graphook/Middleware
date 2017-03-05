@@ -11,6 +11,7 @@ import response from 'stages/share/response.stage';
 import handleError from 'stages/share/handleError.stage';
 import {ObjectId} from 'mongodb';
 import constants from 'constants';
+import checkPrivateAccess from 'stages/share/checkPrivateAccess.stage';
 
 const requestBodyType = {
   title: "Search Type",
@@ -50,7 +51,22 @@ module.exports = function(req, res) {
     .then(() => validateRequest(scope.req.query, requestQuery.properties, scope.errors, ['query'], scope.req.query))
     .then(() => cleanseMongoQuery(scope.req.body))
     .then(() => throwErrorIfNeeded(scope.errors))
-    .then(() => advancedFind(scope, 'set', scope.req.body, 'foundSet', ['set']))
+    .then(() => advancedFind(scope, 'set', Object.assign(scope.req.body, {
+      $or: [
+        {
+          '_access.isPrivate': false
+        },
+        {
+          '_access.isPrivate': {
+            $exists: false
+          }
+        },
+        {
+          '_access.isPrivate': true,
+          '_access.creator': scope.user._id
+        }
+      ]
+    }), 'foundSet', ['set']))
     .then(() => throwErrorIfNeeded(scope.errors))
     .then(() => response(scope))
     .catch((err) => handleError(err, scope));

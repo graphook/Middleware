@@ -16,6 +16,10 @@ startMongo(() => {
         description: 'text',
         tags: 'text'
       }, cb);
+    }, (cb) => {
+      db.item.createIndex({
+        tags: 'text'
+      }, cb);
     }
   ], (err, results) => {
     if (err) {

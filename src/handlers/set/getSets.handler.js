@@ -42,18 +42,32 @@ module.exports = function(req, res) {
     .then(() => validateRequest(scope.req.query, requestQuery.properties, scope.errors, ['query']))
     .then(() => throwErrorIfNeeded(scope.errors))
     .then(() => {
-      const query = (req.query.q) ? {
-        $text: {
+      const query = {
+        $or: [
+          {
+            '_access.isPrivate': false
+          },
+          {
+            '_access.isPrivate': {
+              $exists: false
+            }
+          },
+          {
+            '_access.isPrivate': true,
+            '_access.creator': scope.user._id
+          }
+        ]
+      };
+      if (req.query.q) {
+        query.$text = {
           $search: req.query.q
         }
-      } : {};
+      }
       const page = parseInt(scope.req.query.page);
       const count = parseInt(scope.req.query.count);
       return db.set.find(query).sort({ stars: -1 }).skip(count * page).limit(count).toArray().then((result) => {
         if (scope.sets.read.length === 0) result.push(null)
-        scope.sets.read = result.filter((set) => {
-          return !(set._access.private && scope.user._id !== set._access.creator)
-        });
+        scope.sets.read = result;
       }).catch((err) => {
         throw err;
       })

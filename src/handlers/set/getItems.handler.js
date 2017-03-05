@@ -10,6 +10,7 @@ import response from 'stages/share/response.stage';
 import handleError from 'stages/share/handleError.stage';
 import {db} from '../../mongo';
 import constants from 'constants';
+import checkPrivateAccess from 'stages/share/checkPrivateAccess.stage';
 
 const requestQuery = {
   title: "Create Type Request",
@@ -41,7 +42,23 @@ module.exports = function(req, res) {
     .then(() => {
       const page = parseInt(scope.req.query.page);
       const count = parseInt(scope.req.query.count);
-      return db.item.find({ '_sets._id': scope.req.params.setId }).skip(count * page).limit(count).toArray().then((result) => {
+      return db.item.find({
+        '_sets._id': scope.req.params.setId,
+        $or: [
+          {
+            '_access.isPrivate': false
+          },
+          {
+            '_access.isPrivate': {
+              $exists: false
+            }
+          },
+          {
+            '_access.isPrivate': true,
+            '_access.creator': scope.user._id
+          }
+        ]
+      }).skip(count * page).limit(count).toArray().then((result) => {
         if (scope.items.read.length === 0) result.push(null)
         scope.items.read = scope.items.read.concat(result);
       }).catch((err) => {

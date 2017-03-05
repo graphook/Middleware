@@ -7,6 +7,7 @@ import throwErrorIfNeeded from 'stages/share/throwErrorIfNeeded.stage';
 import response from 'stages/share/response.stage';
 import simpleFind from 'stages/share/simpleFind.stage'
 import handleError from 'stages/share/handleError.stage';
+import checkPrivateAccess from 'stages/share/checkPrivateAccess.stage';
 
 module.exports = function(req, res) {
   const scope = scopeFactory(req, res);
@@ -15,6 +16,7 @@ module.exports = function(req, res) {
     .then(() => checkMongoIds(scope, { 'params.setId': scope.req.params.setId }))
     .then(() => throwErrorIfNeeded(scope.errors))
     .then(() => simpleFind(scope, 'set', scope.req.params.setId, 'foundSet', ['set']))
+    .then(() => checkPrivateAccess(scope, scope.foundSet._access, scope.user, 'set', scope.req.params.setId))
     .then(() => throwErrorIfNeeded(scope.errors))
     .then(() => response(scope))
     .catch((err) => handleError(err, scope));

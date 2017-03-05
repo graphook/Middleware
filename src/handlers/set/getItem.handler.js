@@ -7,6 +7,7 @@ import throwErrorIfNeeded from 'stages/share/throwErrorIfNeeded.stage';
 import response from 'stages/share/response.stage';
 import simpleFind from 'stages/share/simpleFind.stage'
 import handleError from 'stages/share/handleError.stage';
+import checkPrivateAccess from 'stages/share/checkPrivateAccess.stage';
 
 module.exports = function(req, res) {
   const scope = scopeFactory(req, res);
@@ -16,6 +17,7 @@ module.exports = function(req, res) {
     .then(() => throwErrorIfNeeded(scope.errors))
     .then(() => simpleFind(scope, 'item', scope.req.params.itemId, 'foundItem', ['item']))
     .then(() => throwErrorIfNeeded(scope.errors))
+    .then(() => checkPrivateAccess(scope, scope.foundItem._access, scope.user, 'item', scope.req.params.itemId))
     .then(() => {
       if (!new Set(scope.foundItem._sets.map(set => set._id)).has(scope.req.params.setId)) {
         scope.errors['set.item'] = 'Set ' + scope.req.params.setId + ' does not contain item ' + scope.req.params.itemId;
