@@ -1,8 +1,8 @@
 import {startMongo, db} from './mongo'
 import async from 'async'
 
-
 startMongo(() => {
+  // Mongo
   async.parallel([
     (cb) => {
       db.set.createIndex({

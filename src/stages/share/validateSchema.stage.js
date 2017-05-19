@@ -1,8 +1,11 @@
 
 export default function recursiveCheck(item, type, errors, path, parent, parentKey) {
+  if (type.constant && item !== type.constant) {
+    errors[path.join('.')] = 'Must be the value: ' + type.constant;
+  }
   if (type.type === 'object') {
     if (typeof item !== 'object') {
-      errors[path.join('.')] = ' should be an object but is a ' + typeof item;
+      errors[path.join('.')] = 'should be an object but is a ' + typeof item;
       return;
     }
     const itemFieldSet = new Set(Object.keys(item));
@@ -55,13 +58,14 @@ export default function recursiveCheck(item, type, errors, path, parent, parentK
       tempPath.push(i);
       recursiveCheck(item[i], type.items, errors, tempPath, item, i);
     }
-  } else if (type.type === 'string') {
+  } else if (type.type === 'keyword' || type.type === 'text') {
     if (typeof item !== 'string') {
       errors[path.join('.')] = 'Should be a string but is a ' + typeof item;
     } else if (type.regex && !(new RegExp(type.regex)).test(item)) {
       errors[path.join('.')] = 'Must follow the regular expression ' + type.regex;
     }
-  } else if (type.type === 'number') {
+  } else if (type.type === 'long' || type.type === 'integer' || type.type === 'short' ||
+      type.type === 'byte' || type.type === 'double' || type.type === 'float') {
     if (typeof item !== 'number') {
       errors[path.join('.')] = 'Should be a number but is a ' + typeof item;
     }
@@ -69,9 +73,14 @@ export default function recursiveCheck(item, type, errors, path, parent, parentK
     if (typeof item !== 'boolean') {
       errors[path.join('.')] = 'Should be a boolean but is a ' + typeof item;
     }
-  } else if (type.type === 'constant') {
-    if (item !== type.value) {
-      errors[path.join('.')] = 'Must be the value: ' + type.value;
+  } else if (type.type === 'date') {
+    if (typeof item !== 'number') {
+      errors[path.join('.')] = 'Should be a number representing time since epoch, but is ' + typeof item;
+    }
+  } else if (type.type === 'integer_range' || type.type === 'float_range' || type.type === 'long_range' ||
+      type.type === 'double_range' || type.type === 'date_range') {
+    if (typeof item !== 'object' || typeof item.gte !== 'number' || typeof item.lte !== 'number') {
+      errors[path.join('.')] = 'The date range is not the proper format';
     }
   } else if (type.type === 'id') {
     if (typeof item !== 'string' || !(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i).test(item)) {

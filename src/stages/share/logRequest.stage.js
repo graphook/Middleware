@@ -8,5 +8,10 @@ export default function(scope) {
     path: scope.req.path,
     method: scope.req.method,
     user: scope.user
+  })
+  .catch((err) => {
+    if (process.env.ENV !== 'prod') {
+      console.error(err);
+    }
   });
 }

@@ -4,19 +4,33 @@ import validateSchema from '../share/validateSchema.stage';
 const validTypes = new Set([
   'object',
   'array',
-  'string',
-  'number',
+  'keyword',
+  'text',
+  'long',
+  'integer',
+  'short',
+  'byte',
+  'double',
+  'float',
+  'date',
   'boolean',
   'any',
-  'constant',
-  'id'
+  'id',
+  'integer_range',
+  'float_range',
+  'long_range',
+  'double_range',
+  'date_range'
 ]);
 const objectSchema = {
   type: 'object',
   requires: ['type'],
   fields: {
     type: {
-      type: 'string'
+      type: 'keyword'
+    },
+    constant: {
+      type: 'any'
     },
     fields: {
       type: 'object',
@@ -27,7 +41,7 @@ const objectSchema = {
     requires: {
       type: 'array',
       items: {
-        type: 'string'
+        type: 'keyword'
       },
       default: []
     },
@@ -35,7 +49,7 @@ const objectSchema = {
       type: 'any'
     },
     description: {
-      type: 'string',
+      type: 'text',
       default: ""
     },
     allowOtherFields: {
@@ -52,7 +66,7 @@ const objectSchema = {
         fields: {
           type: 'array',
           items: {
-            type: 'string'
+            type: 'keyword'
           }
         }
       }
@@ -64,7 +78,10 @@ const arraySchema = {
   requires: ['type'],
   fields: {
     type: {
-      type: 'string'
+      type: 'keyword'
+    },
+    constant: {
+      type: 'any'
     },
     items: {
       type: 'object',
@@ -75,26 +92,7 @@ const arraySchema = {
       }
     },
     description: {
-      type: 'string',
-      default: ""
-    },
-    default: {
-      type: 'any'
-    }
-  }
-}
-const constantSchema = {
-  type: 'object',
-  requires: ['type', 'value'],
-  fields: {
-    type: {
-      type: 'string'
-    },
-    value: {
-      type: 'any'
-    },
-    description: {
-      type: 'string',
+      type: 'text',
       default: ""
     },
     default: {
@@ -107,17 +105,20 @@ const stringSchema  = {
   requires: ['type'],
   fields: {
     type: {
-      type: 'string'
+      type: 'keyword'
+    },
+    constant: {
+      type: 'any'
     },
     default: {
       type: 'any'
     },
     description: {
-      type: 'string',
+      type: 'text',
       default: ""
     },
     regex: {
-      type: 'string'
+      type: 'keyword'
     }
   }
 }
@@ -126,13 +127,16 @@ const otherSchema = {
   requires: ['type'],
   fields: {
     type: {
-      type: 'string'
+      type: 'keyword'
+    },
+    constant: {
+      type: 'any'
     },
     default: {
       type: 'any'
     },
     description: {
-      type: 'string',
+      type: 'text',
       default: ""
     }
   }
@@ -157,11 +161,12 @@ export default function recursiveCheck(type, errors, path) {
     if (errors.length === curErrorNumber) {
       recursiveCheck(type.items, errors, path.concat(['items']));
     }
-  } else if (type.type === 'constant') {
-    validateSchema(type, constantSchema, errors, path);
-  } else if (type.type === 'string') {
+  } else if (type.type === 'text' || type.type === 'keyword') {
     validateSchema(type, stringSchema, errors, path);
   } else {
     validateSchema(type, otherSchema, errors, path);
+  }
+  if (type.constant) {
+    validateSchema(type.constant, type, errors, path.concat(['constant']));
   }
 }

@@ -5,139 +5,50 @@ const routes = [
     path: '/',
     handler: require('./handlers/welcome.handler')
   },
-  {
-    method: 'get',
-    path: '/v1/set',
-    handler: require('./handlers/set/getSets.handler')
-  },
-  {
-    method: 'get',
-    path: '/v1/set/:setId',
-    handler: require('./handlers/set/getSet.handler')
-  },
+
+
+
   {
     method: 'post',
-    path: '/v1/set/search',
-    handler: require('./handlers/set/searchSet.handler')
+    path: '/v2/type',
+    handler: require('./handlers/object/createType.handler')
   },
+
+
+
   {
     method: 'post',
-    path: '/v1/set/:setId/item/search',
-    handler: require('./handlers/set/searchItem.handler')
-  },
-  {
-    method: 'get',
-    path: '/v1/set/:setId/item/:itemId',
-    handler: require('./handlers/set/getItem.handler')
-  },
-  {
-    method: 'get',
-    path: '/v1/set/:setId/item',
-    handler: require('./handlers/set/getItems.handler')
-  },
-  {
-    method: 'post',
-    path: '/v1/set',
-    handler: require('./handlers/set/createSet.handler')
-  },
-  {
-    method: 'post',
-    path: '/v1/set/:setId/clone',
-    handler: require('./handlers/set/cloneSet.handler')
-  },
-  {
-    method: 'put',
-    path: '/v1/set/:setId',
-    handler: require('./handlers/set/updateSetMetadata.handler')
-  },
-  {
-    method: 'post',
-    path: '/v1/set/:setId/item',
-    handler: require('./handlers/set/addToSet.handler')
-  },
-  {
-    method: 'delete',
-    path: '/v1/set/:setId/item/:itemId',
-    handler: require('./handlers/set/removeFromSet.handler')
-  },
-  {
-    method: 'put',
-    path: '/v1/set/:setId/item/:itemId',
-    handler: require('./handlers/set/updateItem.handler')
-  },
-  {
-    method: 'delete',
-    path: '/v1/set/:setId',
-    handler: require('./handlers/set/deleteSet.handler')
-  },
-  {
-    method: 'put',
-    path: '/v1/set/:setId/star',
-    handler: require('./handlers/set/starSet.handler')
-  },
-  {
-    method: 'put',
-    path: '/v1/set/:setId/unstar',
-    handler: require('./handlers/set/unstarSet.handler')
-  },
-  {
-    method: 'get',
-    path: '/v1/type',
-    handler: require('./handlers/type/getTypes.handler')
-  },
-  {
-    method: 'get',
-    path: '/v1/type/:typeId',
-    handler: require('./handlers/type/getType.handler')
-  },
-  {
-    method: 'post',
-    path: '/v1/type',
-    handler: require('./handlers/type/createType.handler')
-  },
-  {
-    method: 'put',
-    path: '/v1/type/:typeId',
-    handler: require('./handlers/type/updateType.handler')
-  },
-  {
-    method: 'delete',
-    path: '/v1/type/:typeId',
-    handler: require('./handlers/type/deleteType.handler')
-  },
-  {
-    method: 'post',
-    path: '/v1/auth/token',
+    path: '/v2/auth/token',
     handler: require('./handlers/user/getToken.handler')
   },
   {
     method: 'post',
-    path: '/v1/user',
+    path: '/v2/user',
     handler: require('./handlers/user/createUser.handler')
   },
   {
     method: 'post',
-    path: '/v1/user/validate',
+    path: '/v2/user/validate',
     handler: require('./handlers/user/validateUser.handler')
   },
   {
     method: 'put',
-    path: '/v1/user',
+    path: '/v2/user',
     handler: require('./handlers/user/updateUser.handler')
   },
   {
     method: 'put',
-    path: '/v1/user/password',
+    path: '/v2/user/password',
     handler: require('./handlers/user/updatePassword.handler')
   },
   {
     method: 'put',
-    path: '/v1/user/key',
+    path: '/v2/user/key',
     handler: require('./handlers/user/regenerateKey.handler')
   },
   {
     method: 'get',
-    path: '/v1/user',
+    path: '/v2/user',
     handler: require('./handlers/user/getUser.handler')
   }
 ]

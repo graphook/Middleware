@@ -10,7 +10,8 @@
     "test": "mocha \"src/**/*.spec.js\" --compilers js:babel-register",
     "coverage": "babel-node node_modules/.bin/babel-istanbul cover _mocha -- \"src/**/*.spec.js\"",
     "postinstall": "npm run build",
-    "init": "better-npm-run init"
+    "initMongo": "better-npm-run initMongo",
+    "initES": "better-npm-run initES"
   },
   "betterScripts": {
     "start": {
@@ -27,8 +28,17 @@
         "PORT": 3030
       }
     },
-    "init": {
-      "command": "babel-node src/init.js"
+    "initMongo": {
+      "command": "babel-node src/initMongo.js",
+      "env": {
+        "NODE_PATH": "./src"
+      }
+    },
+    "initES": {
+      "command": "babel-node src/initES.js",
+      "env": {
+        "NODE_PATH": "./src"
+      }
     }
   },
   "repository": {

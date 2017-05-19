@@ -4,7 +4,7 @@ import checkIfUser from 'stages/share/checkIfUser.stage'
 import logRequest from 'stages/share/logRequest.stage'
 import validateRequest from 'stages/share/validateSchema.stage';
 import throwErrorIfNeeded from 'stages/share/throwErrorIfNeeded.stage';
-import simpleUpdate from 'stages/share/simpleUpdate.stage';
+import simpleUpdate from 'stages/user/simpleUpdate.stage';
 import response from 'stages/share/response.stage';
 import handleError from 'stages/share/handleError.stage';
 import constants from 'constants';
