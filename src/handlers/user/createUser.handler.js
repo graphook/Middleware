@@ -7,7 +7,7 @@ import checkIfDuplicateUser from 'stages/user/checkIfDuplicateUser.stage';
 import saveNewUser from 'stages/user/saveNewUser.stage';
 import response from 'stages/share/response.stage';
 import handleError from 'stages/share/handleError.stage';
-import constants from 'constants';
+import {usernameRegex, emailRegex, passwordRegex} from 'appConstants';
 
 
 const requestBodyType = {
@@ -20,17 +20,17 @@ const requestBodyType = {
       username: {
         type: "string",
         description: "The name of the user. This will be public on Zenow. Usernames must consist of letters, numbers, -, or _ and be between 3 and 30 characters in length.",
-        regex: constants.usernameRegex
+        regex: usernameRegex
       },
       email: {
         type: "string",
         description: "The user's email",
-        regex: constants.emailRegex
+        regex: emailRegex
       },
       password: {
         type: "string",
         description: "The user's password. Passwords must consist of letters, numbers, or one of these symbols: $-/:-?{-~!\"^_`[]",
-        regex: constants.passwordRegex
+        regex: passwordRegex
       }
     }
   }

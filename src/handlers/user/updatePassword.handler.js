@@ -6,7 +6,7 @@ import throwErrorIfNeeded from 'stages/share/throwErrorIfNeeded.stage';
 import updatePassword from 'stages/user/updatePassword.stage';
 import response from 'stages/share/response.stage';
 import handleError from 'stages/share/handleError.stage';
-import constants from 'constants';
+import {passwordRegex} from 'appConstants';
 
 
 const requestBodyType = {
@@ -19,12 +19,12 @@ const requestBodyType = {
       newPassword: {
         type: "string",
         description: "The desired new password. Passwords must consist of letters, numbers, or one of these symbols: $-/:-?{-~!\"^_`[]",
-        regex: constants.passwordRegex
+        regex: passwordRegex
       },
       oldPassword: {
         type: "string",
         description: "The user's current password. Passwords must consist of letters, numbers, or one of these symbols: $-/:-?{-~!\"^_`[]",
-        regex: constants.passwordRegex
+        regex: passwordRegex
       }
     }
   }

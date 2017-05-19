@@ -7,7 +7,7 @@ import throwErrorIfNeeded from 'stages/share/throwErrorIfNeeded.stage';
 import simpleUpdate from 'stages/user/simpleUpdate.stage';
 import response from 'stages/share/response.stage';
 import handleError from 'stages/share/handleError.stage';
-import constants from 'constants';
+import {emailRegex} from 'appConstants';
 
 
 const requestBodyType = {
@@ -19,7 +19,7 @@ const requestBodyType = {
       email: {
         type: "string",
         description: "The user's new email",
-        regex: constants.emailRegex
+        regex: emailRegex
       }
     }
   }

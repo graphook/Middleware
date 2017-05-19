@@ -1,27 +1,8 @@
 // This is my favourite file. It's pretty meta.
 import validateSchema from '../share/validateSchema.stage';
+import {validTypes} from 'appConstants';
+import {type} from 'schemas';
 
-const validTypes = new Set([
-  'object',
-  'array',
-  'keyword',
-  'text',
-  'long',
-  'integer',
-  'short',
-  'byte',
-  'double',
-  'float',
-  'date',
-  'boolean',
-  'any',
-  'id',
-  'integer_range',
-  'float_range',
-  'long_range',
-  'double_range',
-  'date_range'
-]);
 const objectSchema = {
   type: 'object',
   requires: ['type'],
@@ -150,8 +131,6 @@ export default function recursiveCheck(type, errors, path) {
     validateSchema(type, objectSchema, errors, path);
     if (Object.keys(errors).length === curErrorNumber) {
       Object.keys(type.fields).forEach((field) => {
-        const tempPath = path.slice(0);
-        tempPath.push(field);
         recursiveCheck(type.fields[field], errors, path.concat(['fields', field]));
       });
     }

@@ -6,17 +6,9 @@ const cleansers = {
     delete user.tokens;
     return user;
   },
-  types: (type) => {
-    delete type._access;
-    return type;
-  },
-  sets: (set) => {
-    delete set._access;
-    return set;
-  },
-  items: (item) => {
-    delete item._access;
-    return item;
+  objects: (object) => {
+    delete object._access;
+    return object;
   }
 }
 
