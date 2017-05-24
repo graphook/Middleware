@@ -7,6 +7,7 @@ import response from 'stages/share/response.stage';
 import handleError from 'stages/share/handleError.stage';
 import createType from './createType.handler';
 import createObject from 'baseOperations/createObject';
+import createObjects from 'baseOperations/createObjects';
 
 module.exports = function(req, res) {
   if (req.body._type && req.body._type === 'type_type') {
@@ -15,7 +16,13 @@ module.exports = function(req, res) {
   const scope = new Scope(req, res);
   Promise.try(() => checkIfUser(scope))
     .then(() => logRequest(scope))
-    .then(() => createObject(scope, req.body, ['body'], 'saved', { saveToResponse: true }))
+    .then(() => {
+      if (Array.isArray(req.body)) {
+        return createObjects(scope, req.body, ['body'], 'saved', { saveToResponse: true });
+      } else {
+        return createObject(scope, req.body, ['body'], 'saved', { saveToResponse: true });
+      }
+    })
     .then(() => response(scope))
     .catch((err) => handleError(err, scope));
 }
