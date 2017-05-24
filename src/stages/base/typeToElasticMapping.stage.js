@@ -21,4 +21,48 @@ export default function typeToElasticMapping(scope, type, path, saveTo) {
   scope[saveTo] = recursiveESMapping(scope, type.properties, path.concat('properties'));
   scope[saveTo].dynamic = 'false';
   delete scope[saveTo].type;
+  scope[saveTo].properties._permissions = {
+    type: 'nested',
+    properties: {
+      owner: {
+        type: 'keyword'
+      },
+      read: {
+        type: 'keyword'
+      },
+      update: {
+        type: 'keyword'
+      },
+      delete: {
+        type: 'keyword'
+      },
+      readPermissionsRead: {
+        type: 'keyword'
+      },
+      readPermissionsAdd: {
+        type: 'keyword'
+      },
+      readPermissionsRemove: {
+        type: 'keyword'
+      },
+      updatePermissionsRead: {
+        type: 'keyword'
+      },
+      updatePermissionsAdd: {
+        type: 'keyword'
+      },
+      updatePermissionsRemove: {
+        type: 'keyword'
+      },
+      deletePermissionsRead: {
+        type: 'keyword'
+      },
+      deletePermissionsAdd: {
+        type: 'keyword'
+      },
+      deletePermissionsRemove: {
+        type: 'keyword'
+      },
+    }
+  }
 }

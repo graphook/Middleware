@@ -1,5 +1,5 @@
 import {db} from '../../mongo'
-import uuid from 'node-uuid'
+import uuid from 'uuid'
 import {ObjectID} from 'mongodb'
 
 export default function(scope) {

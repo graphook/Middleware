@@ -17,13 +17,9 @@ export default function(err, scope) {
     }
   }
   scope.status = scope.status || 400;
-  scope.res.status(scope.status).send({
+  scope.res.status(scope.status).send(Object.assign(cleanse(scope), {
     status: scope.status,
     errors: scope.errors,
-    auth: scope.auth,
-    users: cleanse('users', scope.users),
-    types: cleanse('types', scope.types),
-    sets: cleanse('sets', scope.sets),
-    items: cleanse('items', scope.items)
-  });
+    auth: scope.auth
+  }));
 }

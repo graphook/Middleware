@@ -1,7 +1,7 @@
 import {db} from '../../mongo';
 import bcrypt from 'bcrypt-nodejs';
 import ObjectID from 'mongodb';
-import uuid from 'node-uuid';
+import uuid from 'uuid';
 
 export default function(scope) {
   const body = scope.req.body;

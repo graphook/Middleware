@@ -13,9 +13,19 @@ const routes = [
     path: '/v2/type',
     handler: require('./handlers/object/createType.handler')
   },
+  {
+    method: 'post',
+    path: '/v2/object',
+    handler: require('./handlers/object/createObject.handler')
+  },
+  {
+    method: 'get',
+    path: '/v2/object/:typeId/:objectId',
+    handler: require('./handlers/object/readObject.handler')
+  },
 
 
-
+/*
   {
     method: 'post',
     path: '/v2/auth/token',
@@ -50,7 +60,7 @@ const routes = [
     method: 'get',
     path: '/v2/user',
     handler: require('./handlers/user/getUser.handler')
-  }
+  }*/
 ]
 
 export default routes;

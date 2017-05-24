@@ -1,7 +1,7 @@
 import Promise from 'bluebird';
 import {db} from 'mongo';
 import bcyrpt from 'bcrypt-nodejs';
-import uuid from 'node-uuid';
+import uuid from 'uuid';
 
 export default function(body, scope) {
   const userKey = uuid.v4();

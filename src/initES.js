@@ -1,8 +1,10 @@
 
 import request from 'superagent';
 import {type} from 'schemas';
+import typeToElasticMapping from 'stages/base/typeToElasticMapping.stage';
 
 // ES
+const scope = {};
 request.get(process.env.ES_URL + '/object')
 .then((result) => console.log("OBJECT index already exists"))
 .catch((err) => {
@@ -14,26 +16,15 @@ request.get(process.env.ES_URL + '/object')
       }
     })
 })
-.then(() => request.put(process.env.ES_URL + '/object/_mapping/type_type')
-  .send({
-    "type_type": {
-      "dynamic": "false",
-      "properties": {
-        "title" : {
-          "type" : "text"
-        },
-        "description": {
-          "type": "keyword"
-        },
-        "tags": {
-          "type": "text"
-        }
-      }
-    }
-  })
-)
+.then(() => typeToElasticMapping(scope, type, [], 'type_type'))
+.then(() => delete scope.type_type.properties._type)
+.then(() => request.put(process.env.ES_URL + '/object/_mapping/type_type').send({ type_type: scope.type_type}))
 .then((result) => console.log("Successfully added the type map"))
 .catch((err) => console.log(err))
+.then(() => type._permissions = {
+  owner: 'zenow',
+  read: ['all']
+})
 .then(() => request.post(process.env.ES_URL + '/object/type_type').send(type))
 .then((result) => console.log("Successfully added the type object"))
 .catch((err) => console.log(err));
