@@ -16,6 +16,13 @@ export default function recursiveCheck(item, type, errors, path, parent, parentK
         }
       });
     }
+    if (type.cannotHave) {
+      type.cannotHave.forEach((field) => {
+        if (item[field] != null) {
+          errors[[...path, field].join('.')] = 'cannot be present';
+        }
+      });
+    }
     if (type.requiresAtLeast) {
       let count = 0;
       type.requiresAtLeast.fields.forEach((field) => {

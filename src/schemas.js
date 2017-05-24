@@ -19,6 +19,7 @@ export const type = {
       },
       properties: {
         requires: ["type"],
+        cannotHave: ["_permissions", "_id"], 
         type: "object",
         allowOtherFields: true,
         fields: {

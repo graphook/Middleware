@@ -20,7 +20,7 @@ const routes = [
   },
   {
     method: 'get',
-    path: '/v2/object/:typeId/:objectId',
+    path: '/v2/object/:objectId',
     handler: require('./handlers/object/readObject.handler')
   },
 

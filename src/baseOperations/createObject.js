@@ -15,6 +15,11 @@ import validateSchema from 'stages/share/validateSchema.stage'
 export default function createObject(scope, object, path, saveTo, options = {}) {
   scope.type = options.type;
   return Promise.try(() => {
+      if (object._permissions || object._id) {
+        scope.errors[path.join('.')] = 'The object to be created must not have a _permissions or _id attribute.'
+      }
+    })
+    .then(() => {
       if (options.type == null) {
         return getObject(scope, 'type_type', object._type, ['type'], 'type');
       }
