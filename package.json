@@ -11,7 +11,8 @@
     "coverage": "babel-node node_modules/.bin/babel-istanbul cover _mocha -- \"src/**/*.spec.js\"",
     "postinstall": "npm run build",
     "initMongo": "better-npm-run initMongo",
-    "initES": "better-npm-run initES"
+    "initES": "better-npm-run initES",
+    "experiment": "better-npm-run experiment"
   },
   "betterScripts": {
     "start": {
@@ -36,6 +37,12 @@
     },
     "initES": {
       "command": "babel-node src/initES.js",
+      "env": {
+        "NODE_PATH": "./src"
+      }
+    },
+    "experiment": {
+      "command": "babel-watch src/experiment.js",
       "env": {
         "NODE_PATH": "./src"
       }

@@ -12,12 +12,26 @@ import validateSchema from 'stages/share/validateSchema.stage'
   saveToResponse: true if the result of this should be saved to the response
 }
 */
-export default function createObject(scope, objects, path, saveTo, options = {}) {
+const objectSchema = {
+  "type": "object",
+  "requires": ["_type"],
+  "allowOtherFields": true,
+  "fields": {
+    "_type": {
+      "type": "keyword"
+    }
+  }
+}
+
+export default function createObjects(scope, objects, path, saveTo, options = {}) {
   scope.type = options.type;
   if (objects.length < 1) {
     return;
   }
-  return Promise.try(() => {
+  return Promise.try(() => objects.forEach((object, index) =>
+      validateSchema(object, objectSchema, scope.errors, ['body', index])))
+    .then(() => throwErrorIfNeeded(scope.errors))
+    .then(() => {
       if (options.type == null) {
         return getObject(scope, 'type_type', objects[0]._type, ['type'], 'type');
       }
@@ -63,5 +77,5 @@ export default function createObject(scope, objects, path, saveTo, options = {})
         });
       }
     })
-    .catch((err) => { console.log(err); throw err })
+    .catch((err) => { throw err })
 }

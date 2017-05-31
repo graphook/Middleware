@@ -4,7 +4,7 @@ import validateSchema from 'stages/share/validateSchema.stage';
 import validateTypeProperties from 'stages/base/validateTypeProperties.stage';
 import throwErrorIfNeeded from 'stages/share/throwErrorIfNeeded.stage';
 import typeToElasticMapping from 'stages/base/typeToElasticMapping.stage';
-import createObject from './createObject';
+import createObjects from './createObjects';
 import {type} from 'schemas';
 
 /*
@@ -18,7 +18,7 @@ export default function createType(scope, newType, path, options = {}) {
     .then(() => validateTypeProperties(newType.properties, scope.errors, path.concat(['properties'])))
     .then(() => typeToElasticMapping(scope, newType, path, 'esMapping'))
     .then(() => throwErrorIfNeeded(scope.errors))
-    .then(() => createObject(scope, newType, path, 'createResponse', {
+    .then(() => createObjects(scope, [newType], path, 'createResponse', {
       type: Object.assign(type, {_type: 'type_type', _id: 'type_type'}),
       isTypeValidationDone: true,
       saveToResponse: true
@@ -28,5 +28,5 @@ export default function createType(scope, newType, path, options = {}) {
       mappingToSend[scope.createResponse._id] = scope.esMapping
       return request.put(process.env.ES_URL + '/object/_mapping/' + scope.createResponse._id).send(mappingToSend);
     })
-    .catch((err) => { console.log(err); throw err })
+    .catch((err) => { throw err })
 }

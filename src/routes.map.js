@@ -6,12 +6,15 @@ const routes = [
     handler: require('./handlers/welcome.handler')
   },
 
-
-
+  {
+    method: 'get',
+    path: '/v2/object/:objectId',
+    handler: require('./handlers/object/readObject.handler')
+  },
   {
     method: 'post',
-    path: '/v2/type',
-    handler: require('./handlers/object/createType.handler')
+    path: '/v2/object/search',
+    handler: require('./handlers/object/searchObject.handler')
   },
   {
     method: 'post',
@@ -19,9 +22,9 @@ const routes = [
     handler: require('./handlers/object/createObject.handler')
   },
   {
-    method: 'get',
-    path: '/v2/object/:objectId',
-    handler: require('./handlers/object/readObject.handler')
+    method: 'put',
+    path: '/v2/object',
+    handler: require('./handlers/object/updateObject.handler')
   },
 
 
