@@ -2,7 +2,9 @@ import Promise from 'bluebird';
 import throwErrorIfNeeded from 'stages/share/throwErrorIfNeeded.stage';
 import request from 'superagent';
 import getObject from './getObject';
-import validateSchema from 'stages/share/validateSchema.stage'
+import validateSchema from 'stages/share/validateSchema.stage';
+import searchObjects from './searchObjects';
+import applyUpdateQuery from 'stages/base/applyUpdateQuery.stage';
 
 /* options (optional):
 {
@@ -93,9 +95,7 @@ const updaterSchema = {
 
 // Check Updater Schema
 // Get the objects
-// Make sure access is granted to all objects
 // Get Object Types
-// Make sure access is granted to all object types
 // apply query to object
 // Check if the updated objects work with the type
 // save the object
@@ -113,15 +113,88 @@ export default function updateObjects(scope, updaters, path, saveTo, options = {
         scope.objectIdsToFetch = scope.objectIdsToFetch.filter((id) => !alreadyFetchedIds.has(id));
       }
     })
-    .then(() => request.get(process.env.ES_URL + '/object/_search').send({
+    .then(() => searchObjects(scope, {
       query: {
         terms: {
           _id: scope.objectIdsToFetch
         }
       }
+    }, ['searchQuery'], 'fetchedObjects'))
+    .then(() => {
+      scope.fetchedObjects = scope.fetchedObjects.reduce((objMap, obj) => {
+        objMap[obj._id] = obj;
+        return objMap;
+      }, {});
+      if (options.objects) {
+        scope.fetchedObjects = Object.assign(scope.fetchedObjects, options.objects)
+      }
+    })
+    .then(() => {
+      scope.typeIdsToFetch = Object.keys(scope.fetchedObjects).reduce((aggSet, objKey) => {
+        aggSet.add(scope.fetchedObjects[objKey]._type);
+        return aggSet;
+      }, new Set());
+      if (options.objects) {
+        const alreadyFetchedTypeIds = new Set(Object.keys(options.types));
+        scope.typeIdsToFetch = scope.typeIdsToFetch.filter((id) => !alreadyFetchedTypeIds.has(id));
+      }
+      scope.typeIdsToFetch = Array.from(scope.typeIdsToFetch);
+    })
+    .then(() => searchObjects(scope, {
+      query: {
+        terms: {
+          _id: scope.typeIdsToFetch
+        }
+      }
+    }, ['searchQuery'], 'fetchedTypes'))
+    .then(() => {
+      scope.fetchedTypes = scope.fetchedTypes.reduce((typeMap, type) => {
+        type.properties.fields._type = { type: 'keyword' };
+        type.properties.fields._permissions = { type: 'object', allowOtherFields: true, fields: {} };
+        type.properties.fields._id = { type: 'keyword' };
+        typeMap[type._id] = type;
+        return typeMap;
+      }, {});
+      if (options.types) {
+        scope.fetchedTypes = Object.assign(scope.fetchedTypes, options.types);
+      }
+    })
+    .then(() => updaters.forEach((updater, index) => {
+      updater.ids.forEach((id, idIndex) => {
+        if (!scope.fetchedTypes[scope.fetchedObjects[id]._type]) {
+          delete scope.fetchedObjects[id];
+          return;
+        }
+        scope.fetchedObjects[id] = applyUpdateQuery(scope, scope.fetchedObjects[id],
+              updater.query, path.concat([index]), 'updatedObject');
+
+        validateSchema(scope.fetchedObjects[id], scope.fetchedTypes[scope.fetchedObjects[id]._type].properties,
+              scope.errors, path.concat([index, 'object', idIndex]));
+      });
     }))
-    .then((result) => {
-      console.log(JSON.stringify(result.body, null, 2));
+    .then(() => throwErrorIfNeeded(scope.errors))
+    .then(() => {
+      scope.bulkRequest = Object.keys(scope.fetchedObjects).reduce((accArr, objKey) => {
+        accArr.push({
+          index: {
+            _index: 'object',
+            _type: scope.fetchedObjects[objKey]._type,
+            _id: scope.fetchedObjects[objKey]._id
+          }
+        })
+        let requestObj = JSON.parse(JSON.stringify(scope.fetchedObjects[objKey]))
+        delete requestObj._type;
+        delete requestObj._id;
+        accArr.push(requestObj);
+        return accArr;
+      }, []);
+    })
+    .then(() => request.post(process.env.ES_URL + '/_bulk')
+      .send(scope.bulkRequest.reduce((acc, val) => acc + JSON.stringify(val) + '\n', '')))
+    .then(() => {
+      Object.keys(scope.fetchedObjects).forEach((objKey) => {
+        scope.addItem('updated', scope.fetchedObjects[objKey]);
+      });
     })
     .catch((err) => { throw err })
 }

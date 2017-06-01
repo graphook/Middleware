@@ -247,4 +247,5 @@ export default function(scope, object, query, path, saveTo) {
     }
   });
   scope[saveTo] = object;
+  return object;
 }
