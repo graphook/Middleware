@@ -26,7 +26,11 @@ const routes = [
     path: '/v2/object',
     handler: require('./handlers/object/updateObject.handler')
   },
-
+  {
+    method: 'delete',
+    path: '/v2/object',
+    handler: require('./handlers/object/deleteObject.handler')
+  },
 
 /*
   {

@@ -16,10 +16,18 @@ export default function getObjects(scope, id, path, saveTo, options = {}) {
         }
       }
     }))
-    .then((result) => scope[saveTo] = Object.assign(result.body.hits.hits[0]._source, {
-      _type: result.body.hits.hits[0]._type,
-      _id: result.body.hits.hits[0]._id
-    }))
+    .then((result) => {
+      if (result.body.hits.hits[0]) {
+        scope[saveTo] = Object.assign(result.body.hits.hits[0]._source, {
+          _type: result.body.hits.hits[0]._type,
+          _id: result.body.hits.hits[0]._id
+        })
+      } else {
+        scope.errors[path.join('.')] = "Resource does not exist.";
+        scope.status = 404;
+      }
+    })
+    .then(() => throwErrorIfNeeded(scope.errors))
     .then(() => checkIfObjectAllowsUser(scope, 'read', scope[saveTo], ['object']))
     .then(() => throwErrorIfNeeded(scope.errors))
     .then(() => {
@@ -27,12 +35,5 @@ export default function getObjects(scope, id, path, saveTo, options = {}) {
         scope.addItem('read', scope[saveTo]);
       }
     })
-    .catch((err) => {
-      if (err.status === 404) {
-        scope.errors[path.join('.')] = "Resource does not exist.";
-        scope.status = 404;
-      } else {
-        throw err
-      }
-    })
+    .catch((err) => { throw err })
 }

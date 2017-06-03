@@ -5,6 +5,7 @@ import getObject from './getObject';
 import validateSchema from 'stages/share/validateSchema.stage';
 import searchObjects from './searchObjects';
 import applyUpdateQuery from 'stages/base/applyUpdateQuery.stage';
+import {isEqual} from 'lodash';
 
 /* options (optional):
 {
@@ -165,11 +166,14 @@ export default function updateObjects(scope, updaters, path, saveTo, options = {
           delete scope.fetchedObjects[id];
           return;
         }
+        const currentPermissions = scope.fetchedObjects[id]._permissions;
         scope.fetchedObjects[id] = applyUpdateQuery(scope, scope.fetchedObjects[id],
               updater.query, path.concat([index]), 'updatedObject');
-
         validateSchema(scope.fetchedObjects[id], scope.fetchedTypes[scope.fetchedObjects[id]._type].properties,
               scope.errors, path.concat([index, 'object', idIndex]));
+        if (!isEqual(currentPermissions, scope.fetchedObjects[id]._permissions)) {
+          scope.errors[path.concat([index, 'object', idIndex, '_permissions']).join('.')] = 'The update query cannot update the permissions.'
+        }
       });
     }))
     .then(() => throwErrorIfNeeded(scope.errors))
@@ -192,9 +196,11 @@ export default function updateObjects(scope, updaters, path, saveTo, options = {
     .then(() => request.post(process.env.ES_URL + '/_bulk')
       .send(scope.bulkRequest.reduce((acc, val) => acc + JSON.stringify(val) + '\n', '')))
     .then(() => {
-      Object.keys(scope.fetchedObjects).forEach((objKey) => {
-        scope.addItem('updated', scope.fetchedObjects[objKey]);
-      });
+      if (options.saveToResponse) {
+        Object.keys(scope.fetchedObjects).forEach((objKey) => {
+          scope.addItem('updated', scope.fetchedObjects[objKey]);
+        });
+      }
     })
     .catch((err) => { throw err })
 }
