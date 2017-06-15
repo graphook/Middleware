@@ -1,8 +1,9 @@
-export default class scope {
+export default class Scope {
   constructor(req, res) {
     this.req = req;
     this.res = res;
     this.errors = {};
+    this.auth = {};
     this.read = {};
     this.created = {};
     this.updated = {};

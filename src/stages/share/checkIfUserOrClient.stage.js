@@ -8,7 +8,7 @@ export default function(scope) {
     return db.user.findOne({ key: apiKey }).then((user) => {
       if (!user) {
         scope.errors.auth = apiKey + ' is not a valid api key.';
-        throw scope;
+        throw scope.errors;
       }
       scope.user = user;
       scope.user._id = scope.user._id.toString();
@@ -25,7 +25,7 @@ export default function(scope) {
     return db.user.findOne({ tokens: token }).then((user) => {
       if (!user) {
         scope.errors.auth = token + ' is not a valid token.';
-        throw scope;
+        throw scope.errors;
       }
       scope.user = user;
       scope.user._id = scope.user._id.toString();
@@ -36,6 +36,6 @@ export default function(scope) {
   } else {
     scope.status = 403;
     scope.errors.auth = 'Must provide an apikey, or access via the website.'
-    throw scope;
+    throw scope.errors;
   }
 }

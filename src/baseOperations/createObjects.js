@@ -10,6 +10,7 @@ import validateSchema from 'stages/share/validateSchema.stage'
   isTypeValidationDone: true if type validation was already done
   private: true if this is to create a private file
   saveToResponse: true if the result of this should be saved to the response
+  sets: An array of set ids to which this should belong (the sets will not be checked)
 }
 */
 const objectSchema = {
@@ -52,6 +53,7 @@ export default function createObjects(scope, objects, path, saveTo, options = {}
         object._permissions = {
           owner: scope.user._id
         }
+        object._sets = (options.sets) ? options.sets : [];
         if (!options.private) {
           object._permissions.read = ['all'];
         }

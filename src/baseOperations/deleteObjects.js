@@ -26,7 +26,12 @@ export default function deleteObjects(scope, ids, path, saveTo, options = {}) {
         }
       }
     }, ['searchQuery'], 'fetchedObjects'))
-    .then(() => scope.fetchedObjects.forEach((obj) => checkIfObjectAllowsUser(scope, 'read', obj, [obj._id])))
+    .then(() => scope.fetchedObjects.forEach((obj, index) => {
+      if (obj._type === 'type_type') {
+        scope.errors[path.concat('object', index, '_type')] = 'Cannot delete a type.'
+      }
+      return checkIfObjectAllowsUser(scope, 'read', obj, [obj._id]);
+    }))
     .then(() => throwErrorIfNeeded(scope.errors))
     .then(() => request.post(process.env.ES_URL + '/_bulk').send(scope.fetchedObjects.reduce((aggStr, obj) => {
         aggStr += JSON.stringify({

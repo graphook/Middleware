@@ -133,6 +133,9 @@ export default function updateObjects(scope, updaters, path, saveTo, options = {
     .then(() => {
       scope.typeIdsToFetch = Object.keys(scope.fetchedObjects).reduce((aggSet, objKey) => {
         aggSet.add(scope.fetchedObjects[objKey]._type);
+        if (scope.fetchedObjects[objKey]._type === 'type_type') {
+          scope.errors[path.concat([index, 'object', idIndex, '_type'])] = "Updating types is not allowed. Create a new type.";
+        }
         return aggSet;
       }, new Set());
       if (options.objects) {
@@ -141,6 +144,7 @@ export default function updateObjects(scope, updaters, path, saveTo, options = {
       }
       scope.typeIdsToFetch = Array.from(scope.typeIdsToFetch);
     })
+    .then(() => throwErrorIfNeeded(scope.errors))
     .then(() => searchObjects(scope, {
       query: {
         terms: {

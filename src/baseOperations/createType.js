@@ -21,7 +21,8 @@ export default function createType(scope, newType, path, options = {}) {
     .then(() => createObjects(scope, [newType], path, 'createResponse', {
       type: Object.assign(type, {_type: 'type_type', _id: 'type_type'}),
       isTypeValidationDone: true,
-      saveToResponse: true
+      saveToResponse: true,
+      sets: ['type_set']
     }))
     .then(() => {
       let mappingToSend = {};

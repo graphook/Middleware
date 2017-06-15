@@ -20,6 +20,9 @@ const cleansers = {
 
 export default function cleanse(info) {
   const result = {};
+  if (info.auth) {
+    result.auth = info.auth;
+  }
   Object.keys(cleansers).forEach((action) => {
     const typeKeys = Object.keys(info[action]);
     if (typeKeys.length > 0) {

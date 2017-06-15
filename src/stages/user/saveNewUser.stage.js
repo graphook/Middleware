@@ -13,7 +13,7 @@ export default function(body, scope) {
     tokens: [],
     stars: []
   }).then((result) => {
-    scope.users.created = scope.users.created.concat(result.ops);
+    scope.auth.user = scope.users.created.concat(result.ops);
     scope.status = 201;
   }).catch((err) => {
     throw err;

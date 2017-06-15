@@ -19,7 +19,7 @@ export const type = {
       },
       properties: {
         requires: ["type"],
-        cannotHave: ["_permissions", "_id"], 
+        cannotHave: ["_permissions", "_id"],
         type: "object",
         allowOtherFields: true,
         fields: {
@@ -29,6 +29,62 @@ export const type = {
           }
         },
         allowOtherProperties: true
+      },
+      tags: {
+        type: "array",
+        items: {
+          type: "text"
+        },
+        default: []
+      }
+    }
+  }
+}
+
+export const set = {
+  title: "Set",
+  description: "A zenow set provides an abstraction on the zenow api to organize data. It represents a collection of objects of the same type.",
+  properties: {
+    type: "object",
+    requires: ["title", "properties", "_type"],
+    fields: {
+      title: {
+        type: "text",
+        description: "The title of the type."
+      },
+      description: {
+        type: "text",
+        default: ""
+      },
+      type: {
+        type: "object",
+        requires: ["_id"],
+        fields: {
+          _id: {
+            type: "keyword"
+          },
+          title: {
+            type: "text"
+          }
+        }
+      },
+      creator: {
+        type: "object",
+        requires: ["_id"],
+        fields: {
+          _id: {
+            type: "keyword"
+          },
+          username: {
+            type: "text"
+          }
+        }
+      },
+      stars: {
+        type: "integer"
+      },
+      numberOfItems: {
+        type: "integer"
       },
       tags: {
         type: "array",
