@@ -1,4 +1,5 @@
 import {isEqual} from 'lodash';
+import {clone} from 'utilities';
 
 // returns an array of all the parents
 const getParentFromRoute = function(object, routeArr) {
@@ -200,7 +201,7 @@ const operations = {
           let after = parent[key].slice(index, parent[key].length);
           parent[key] = before.concat(queryValue.$each).concat(after);
         } else if (Array.isArray(queryValue.$each)) {
-          let clonedValue = JSON.parse(JSON.stringify(queryValue));
+          let clonedValue = clone(queryValue);
           delete clonedValue.$position;
           delete clonedValue.$slice;
           delete clonedValue.$sort;

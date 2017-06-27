@@ -9,7 +9,7 @@ import checkIfObjectAllowsUser from 'stages/share/checkifObjectAllowsUser.stage'
 }
 */
 export default function getObjects(scope, id, path, saveTo, options = {}) {
-  return Promise.try(() => request.get(process.env.ES_URL + '/object/_search').send({
+  return Promise.try(() => request.post(process.env.ES_URL + '/object/_search').send({
       query: {
         terms: {
           _id: [id]

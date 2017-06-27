@@ -1,7 +1,6 @@
 // This is my favourite file. It's pretty meta.
 import validateSchema from '../share/validateSchema.stage';
 import {validTypes} from 'appConstants';
-import {type} from 'schemas';
 
 const objectSchema = {
   type: 'object',

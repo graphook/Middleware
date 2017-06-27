@@ -76,9 +76,6 @@ const routes = [
     path: '/v2/type',
     handler: require('./handlers/type/createType.handler')
   },
-
-
-
   {
     method: 'post',
     path: '/v2/set',

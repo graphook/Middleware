@@ -5,8 +5,8 @@ import logRequest from 'stages/share/logRequest.stage'
 import throwErrorIfNeeded from 'stages/share/throwErrorIfNeeded.stage';
 import response from 'stages/share/response.stage';
 import handleError from 'stages/share/handleError.stage';
-import createType from './createType.handler';
 import createObjects from 'baseOperations/createObjects';
+import createType from './createType.handler.js';
 
 module.exports = function(req, res) {
   if (req.body._type && req.body._type === 'type_type') {

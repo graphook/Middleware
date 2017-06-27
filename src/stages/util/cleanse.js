@@ -20,7 +20,7 @@ const cleansers = {
 
 export default function cleanse(info) {
   const result = {};
-  if (info.auth) {
+  if (Object.keys(info.auth).length > 0) {
     result.auth = info.auth;
   }
   Object.keys(cleansers).forEach((action) => {

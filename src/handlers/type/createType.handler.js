@@ -7,7 +7,6 @@ import throwErrorIfNeeded from 'stages/share/throwErrorIfNeeded.stage';
 import createType from 'baseOperations/createType';
 import response from 'stages/share/response.stage';
 import handleError from 'stages/share/handleError.stage';
-import {type} from 'schemas';
 
 module.exports = function(req, res) {
   const scope = new Scope(req, res);
@@ -18,7 +17,7 @@ module.exports = function(req, res) {
         scope.errors['body._type'] = "This is not a type. Should be type_type"
       }
     })
-    .then(() => createType(scope, req.body, ['body']))
+    .then(() => createType(scope, Object.assign(req.body, { _type: 'type_type' }), ['body']))
     .then(() => response(scope))
     .catch((err) => handleError(err, scope));
 }

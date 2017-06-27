@@ -1,4 +1,4 @@
-export const type = {
+export const type_type = {
   title: "Type",
   description: "A zenow type provides the schema for all objects that ascribe to this type.",
   properties: {
@@ -41,12 +41,12 @@ export const type = {
   }
 }
 
-export const set = {
+export const set_type = {
   title: "Set",
   description: "A zenow set provides an abstraction on the zenow api to organize data. It represents a collection of objects of the same type.",
   properties: {
     type: "object",
-    requires: ["title", "properties", "_type"],
+    requires: ["title", "_type"],
     fields: {
       title: {
         type: "text",
@@ -95,4 +95,46 @@ export const set = {
       }
     }
   }
+}
+
+export const type_set = {
+  title: "Zenow Types",
+  description: "All types indexed by the database and officially searchable by the zenow ui",
+  tags: ["zenow", "type", "meta"],
+  type: {
+    _id: "set_type",
+    title: "set"
+  },
+  creator: {
+    _id: 'zenow',
+    username: 'zenow'
+  },
+  stars: 0,
+  numberOfItems: 2,
+  _permissions: {
+    owner: 'zenow',
+    read: ['all']
+  },
+  _sets: ['set_set']
+}
+
+export const set_set = {
+  title: "Zenow Sets",
+  description: "All sets officially searchable by the zenow ui.",
+  tags: ["zenow", "set", "meta"],
+  type: {
+    _id: "set_set",
+    title: "set"
+  },
+  creator: {
+    _id: 'zenow',
+    username: 'zenow'
+  },
+  stars: 0,
+  numberOfItems: 2,
+  _permissions: {
+    owner: 'zenow',
+    read: ['all']
+  },
+  _sets: ['set_set']
 }

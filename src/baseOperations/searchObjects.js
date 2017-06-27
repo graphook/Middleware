@@ -48,10 +48,8 @@ export default function searchObjects(scope, query, path, saveTo, options = {}) 
       }
     })
     .catch((err) => {
-      console.log(err.response.body)
       if (err.response && err.response.body && err.response.body.error && err.response.body.error.reason) {
         scope.errors[path.join('.')] = err.response.body.error.reason;
-        console.log(scope.errors);
       } else {
         throw err
       }

@@ -7,8 +7,7 @@
     "start": "better-npm-run start",
     "build": "babel src --out-dir build",
     "dev": "better-npm-run dev",
-    "test": "mocha \"src/**/*.spec.js\" --compilers js:babel-register",
-    "coverage": "babel-node node_modules/.bin/babel-istanbul cover _mocha -- \"src/**/*.spec.js\"",
+    "test": "better-npm-run test",
     "postinstall": "npm run build",
     "initMongo": "better-npm-run initMongo",
     "initES": "better-npm-run initES",
@@ -29,14 +28,22 @@
         "PORT": 3030
       }
     },
+    "test": {
+      "command": "mocha \"src/**/*.spec.js\" --compilers js:babel-register",
+      "env": {
+        "NODE_PATH": "./src",
+        "NODE_ENV": "dev",
+        "PORT": 3030
+      }
+    },
     "initMongo": {
-      "command": "babel-node src/initMongo.js",
+      "command": "babel-node src/initMongo.start.js",
       "env": {
         "NODE_PATH": "./src"
       }
     },
     "initES": {
-      "command": "babel-node src/initES.js",
+      "command": "babel-node src/initES.start.js",
       "env": {
         "NODE_PATH": "./src"
       }
@@ -61,7 +68,9 @@
   "devDependencies": {
     "babel-istanbul": "^0.11.0",
     "babel-watch": "^2.0.2",
-    "chai": "^3.5.0"
+    "chai": "^3.5.0",
+    "mocha": "^3.4.2",
+    "supertest": "^3.0.0"
   },
   "dependencies": {
     "async": "^2.1.4",

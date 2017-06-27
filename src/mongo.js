@@ -13,9 +13,9 @@ export function startMongo(cb) {
   // Use connect method to connect to the Server
   MongoClient.connect(uriString, (err, database) => {
     if (err) {
-      console.log(err);
+      console.info(err);
     } else {
-      console.log("Connected correctly to mongo");
+      console.info("Connected correctly to mongo");
       db.connection = database;
       db.user = promisifyAll(database.collection('user'));
       db.set = promisifyAll(database.collection('set'));

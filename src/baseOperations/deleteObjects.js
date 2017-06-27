@@ -48,5 +48,5 @@ export default function deleteObjects(scope, ids, path, saveTo, options = {}) {
         scope.fetchedObjects.forEach((obj) => scope.addItem('deleted', obj));
       }
     })
-    .catch((err) => { console.log(err); throw err });
+    .catch((err) => { throw err });
 }

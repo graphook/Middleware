@@ -5,10 +5,11 @@ import logRequest from 'stages/share/logRequest.stage'
 import throwErrorIfNeeded from 'stages/share/throwErrorIfNeeded.stage';
 import response from 'stages/share/response.stage';
 import handleError from 'stages/share/handleError.stage';
-import createType from './createType.handler';
 import createObjects from 'baseOperations/createObjects';
-import {set} from 'schemas';
+import {set_type} from 'defaultObjects';
 
+
+// TODO: fix
 module.exports = function(req, res) {
   const scope = new Scope(req, res);
   Promise.try(() => checkIfUser(scope))
@@ -20,7 +21,7 @@ module.exports = function(req, res) {
       req.body.numberOfItems = 0;
     })
     .then(() => createObjects(scope, [req.body], ['body'], 'createResponse', {
-      type: Object.assign(set, {_type: 'set_type', _id: 'set_type'}),
+      type: Object.assign(set_type, {_type: 'set_type', _id: 'set_type'}),
       isTypeValidationDone: true,
       saveToResponse: true,
       sets: ['set_set']

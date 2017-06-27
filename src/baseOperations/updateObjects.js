@@ -16,6 +16,8 @@ import {isEqual} from 'lodash';
       waste time fetching this object if it is present here. These should
       already have successfully gone through the security check.
   saveToResponse: true if the result of this should be saved to the response
+  beforeSave: (scope, objects) =>
+  beforeUpdate: (scope, objects) =>
 }
 */
 const updaterSchema = {
@@ -107,6 +109,7 @@ export default function updateObjects(scope, updaters, path, saveTo, options = {
   }
   return Promise.try(() => validateSchema(updaters, updaterSchema, scope.errors, path))
     .then(() => throwErrorIfNeeded(scope.errors))
+    // Get the items that need to be fetched
     .then(() => {
       scope.objectIdsToFetch = updaters.reduce((aggArr, updater) => aggArr.concat(updater.ids), []);
       if (options.objects) {
@@ -114,6 +117,7 @@ export default function updateObjects(scope, updaters, path, saveTo, options = {
         scope.objectIdsToFetch = scope.objectIdsToFetch.filter((id) => !alreadyFetchedIds.has(id));
       }
     })
+    // Do a search request to get those items
     .then(() => searchObjects(scope, {
       query: {
         terms: {
@@ -121,6 +125,24 @@ export default function updateObjects(scope, updaters, path, saveTo, options = {
         }
       }
     }, ['searchQuery'], 'fetchedObjects'))
+    // Check to be sure all the items were fetched. Error if they weren't
+    .then(() => {
+      let values = {};
+      scope.objectIdsToFetch.concat(scope.fetchedObjects.map((obj) => obj._id)).forEach((id) => {
+        if (values[id]) {
+          values[id]++;
+        } else {
+          values[id] = 1;
+        }
+      });
+      Object.keys(values).forEach((valueKey) => {
+        if (values[valueKey] < 2) {
+          scope.errors[valueKey] = "Cannot find an object with id " + valueKey
+        }
+      })
+    })
+    .then(() => throwErrorIfNeeded(scope.errors))
+    // Combine the objects fetched with those provided
     .then(() => {
       scope.fetchedObjects = scope.fetchedObjects.reduce((objMap, obj) => {
         objMap[obj._id] = obj;
@@ -128,6 +150,11 @@ export default function updateObjects(scope, updaters, path, saveTo, options = {
       }, {});
       if (options.objects) {
         scope.fetchedObjects = Object.assign(scope.fetchedObjects, options.objects)
+      }
+    })
+    .then(() => {
+      if (options.beforeUpdate) {
+        options.beforeUpdate(scope, scope.fetchedObjects);
       }
     })
     .then(() => {
@@ -171,16 +198,22 @@ export default function updateObjects(scope, updaters, path, saveTo, options = {
           return;
         }
         const currentPermissions = scope.fetchedObjects[id]._permissions;
+        scope.fetchedTypes[scope.fetchedObjects[id]._type].properties.fields._sets = { type: 'array', items: { type: 'keyword' } };
         scope.fetchedObjects[id] = applyUpdateQuery(scope, scope.fetchedObjects[id],
               updater.query, path.concat([index]), 'updatedObject');
         validateSchema(scope.fetchedObjects[id], scope.fetchedTypes[scope.fetchedObjects[id]._type].properties,
-              scope.errors, path.concat([index, 'object', idIndex]));
+              scope.errors, path.concat([index, 'id', id]));
         if (!isEqual(currentPermissions, scope.fetchedObjects[id]._permissions)) {
-          scope.errors[path.concat([index, 'object', idIndex, '_permissions']).join('.')] = 'The update query cannot update the permissions.'
+          scope.errors[path.concat([index, 'id', id, '_permissions']).join('.')] = 'The update query cannot update the permissions.'
         }
       });
     }))
     .then(() => throwErrorIfNeeded(scope.errors))
+    .then(() => {
+      if (options.beforeSave) {
+        options.beforeSave(scope, scope.fetchedObjects);
+      }
+    })
     .then(() => {
       scope.bulkRequest = Object.keys(scope.fetchedObjects).reduce((accArr, objKey) => {
         accArr.push({
@@ -199,6 +232,7 @@ export default function updateObjects(scope, updaters, path, saveTo, options = {
     })
     .then(() => request.post(process.env.ES_URL + '/_bulk')
       .send(scope.bulkRequest.reduce((acc, val) => acc + JSON.stringify(val) + '\n', '')))
+    .then(() => scope[saveTo] = scope.fetchedObjects)
     .then(() => {
       if (options.saveToResponse) {
         Object.keys(scope.fetchedObjects).forEach((objKey) => {

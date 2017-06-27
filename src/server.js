@@ -5,9 +5,9 @@ import {startMongo, db} from './mongo'
 import routes from './routes.map'
 import bodyParser from 'body-parser'
 
-export default function startServer() {
-  startMongo();
-  let app = express();
+export const app = express();
+
+export default function startServer(done = () => {}) {
   /*if (process.env.ENV === 'prod') {
     app.use((req, res, next) => {
       if (req.get('x-forwarded-proto') !== 'https') {
@@ -39,7 +39,7 @@ export default function startServer() {
         app[route.method](route.path, route.handler);
       }
     } catch(e) {
-      console.log('Error at route ', route, e);
+      console.info('Error at route ', route, e);
     }
   });
   if (process.env.ENV !== 'prod') {
@@ -55,6 +55,7 @@ export default function startServer() {
   })
   let port = process.env.PORT || 3030;
   app.listen(port, () => {
-    console.log('Application listening on ', port);
+    console.info('Application listening on ', port);
   });
+  startMongo(done);
 }

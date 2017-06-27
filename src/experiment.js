@@ -30,7 +30,7 @@ const scope = {
 
 applyUpdateQuery(scope, object, query, ['body'], 'saved');
 
-console.log('ERRORS -------------------')
-console.log(JSON.stringify(scope.errors, null, 2));
-console.log('RESULT--------------------')
-console.log(JSON.stringify(scope.saved, null, 2))
+console.info('ERRORS -------------------')
+console.info(JSON.stringify(scope.errors, null, 2));
+console.info('RESULT--------------------')
+console.info(JSON.stringify(scope.saved, null, 2))
