@@ -6,11 +6,17 @@ import checkIfObjectAllowsUser from 'stages/share/checkifObjectAllowsUser.stage'
 /*
 {
   saveToResponse: true if the result of this should be saved to the result
+  filters: An array of additional filters to be applied
+  page: The page number
+  count: the number per page
 }
 */
 //
 export default function searchObjects(scope, query, path, saveTo, options = {}) {
-  return Promise.try(() => request.post(process.env.ES_URL + '/object/_search').send({
+  const filters = options.filters || [];
+  let page = options.page || 0;
+  let count = options.count || 10;
+  return Promise.try(() => request.post(process.env.ES_URL + '/object/_search?from=' + page + '&size=' + count).send({
       query: {
         bool: {
           must: query.query,
@@ -30,7 +36,7 @@ export default function searchObjects(scope, query, path, saveTo, options = {}) 
                 }
               }
             }
-          ]
+          ].concat(filters)
         }
       }
     }))
@@ -49,7 +55,7 @@ export default function searchObjects(scope, query, path, saveTo, options = {}) 
     })
     .catch((err) => {
       if (err.response && err.response.body && err.response.body.error && err.response.body.error.reason) {
-        scope.errors[path.join('.')] = err.response.body.error.reason;
+        scope.errors[path.concat('searchQuery').join('.')] = err.response.body.error.reason;
       } else {
         throw err
       }

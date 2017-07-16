@@ -41,11 +41,11 @@ export default function createObjects(scope, objects, path, saveTo, options = {}
     .then(() => throwErrorIfNeeded(scope.errors))
     .then(() => {
       objects.forEach((object, index) => {
-        delete object._type;
         scope.objectType.properties.fields._sets = { type: 'array', items: { type: 'keyword' } }
         if (!options.isTypeValidationDone) {
           validateSchema(object, scope.objectType.properties, scope.errors, path.concat(index));
         }
+        delete object._type;
       });
     })
     .then(() => throwErrorIfNeeded(scope.errors))

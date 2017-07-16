@@ -47,6 +47,19 @@ export const familyType = {
           "description": ""
         },
         "description": ""
+      },
+      "_sets": {
+        "type": "array",
+        "items": {
+          "type": "keyword",
+        },
+        "default": [],
+        "description": "Defines the Sets of which this object is a member."
+      },
+      "_type": {
+        "type": "keyword",
+        "constant": "familyType",
+        "description": "Defines the object's Type as set_type."
       }
     },
     "requires": [],

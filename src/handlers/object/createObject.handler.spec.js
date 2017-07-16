@@ -8,7 +8,8 @@ import createFamilySet from 'testHelpers/createFamilySet';
 import {families, familySet} from 'testHelpers/sampleData';
 import {cloneAssign} from 'utilities';
 
-describe('Create Object', () => {
+describe('Create Object', function() {
+  this.timeout(10000);
   before((done) => {
     startServer(() => preTest(() => createFamilyType(() => createFamilySet(done))));
   });
@@ -99,7 +100,7 @@ describe('Create Object', () => {
       body: cloneAssign(families[0], { _type: 'set_type' })
     }, {
       status: 400,
-      errors: ['body.0', 'body.0._type', 'body.0.title']
+      errors: ['body.0._type']
     }, done);
   })
   it ('should error when the provided type does not exist', (done) => {

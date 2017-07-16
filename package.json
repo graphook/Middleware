@@ -11,6 +11,7 @@
     "postinstall": "npm run build",
     "initMongo": "better-npm-run initMongo",
     "initES": "better-npm-run initES",
+    "initDocumentation": "better-npm-run initDocumentation",
     "experiment": "better-npm-run experiment"
   },
   "betterScripts": {
@@ -44,6 +45,12 @@
     },
     "initES": {
       "command": "babel-node src/initES.start.js",
+      "env": {
+        "NODE_PATH": "./src"
+      }
+    },
+    "initDocumentation": {
+      "command": "babel-node src/initDocumentation.start.js",
       "env": {
         "NODE_PATH": "./src"
       }

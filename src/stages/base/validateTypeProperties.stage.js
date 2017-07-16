@@ -41,7 +41,7 @@ const objectSchema = {
       requires: ['count', 'fields'],
       fields: {
         count: {
-          type: 'number'
+          type: 'integer'
         },
         fields: {
           type: 'array',
@@ -49,6 +49,12 @@ const objectSchema = {
             type: 'keyword'
           }
         }
+      }
+    },
+    cannotHave: {
+      type: 'array',
+      items: {
+        type: 'string'
       }
     }
   }
@@ -99,6 +105,12 @@ const stringSchema  = {
     },
     regex: {
       type: 'keyword'
+    },
+    enums: {
+      type: 'array',
+      items: {
+        type: 'keyword'
+      }
     }
   }
 }

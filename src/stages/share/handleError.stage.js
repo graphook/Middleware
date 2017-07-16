@@ -21,7 +21,6 @@ export default function(err, scope) {
   scope.status = scope.status || 400;
   scope.res.status(scope.status).send(Object.assign(cleanse(scope), {
     status: scope.status,
-    errors: scope.errors,
-    auth: scope.auth
+    errors: scope.errors
   }));
 }

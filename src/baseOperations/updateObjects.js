@@ -6,6 +6,7 @@ import validateSchema from 'stages/share/validateSchema.stage';
 import searchObjects from './searchObjects';
 import applyUpdateQuery from 'stages/base/applyUpdateQuery.stage';
 import {isEqual} from 'lodash';
+import {cloneAssign} from 'utilities';
 
 /* options (optional):
 {
@@ -201,7 +202,8 @@ export default function updateObjects(scope, updaters, path, saveTo, options = {
         scope.fetchedTypes[scope.fetchedObjects[id]._type].properties.fields._sets = { type: 'array', items: { type: 'keyword' } };
         scope.fetchedObjects[id] = applyUpdateQuery(scope, scope.fetchedObjects[id],
               updater.query, path.concat([index]), 'updatedObject');
-        validateSchema(scope.fetchedObjects[id], scope.fetchedTypes[scope.fetchedObjects[id]._type].properties,
+        validateSchema(cloneAssign(scope.fetchedObjects[id], {}, ['_id', '_permissions']),
+              scope.fetchedTypes[scope.fetchedObjects[id]._type].properties,
               scope.errors, path.concat([index, 'id', id]));
         if (!isEqual(currentPermissions, scope.fetchedObjects[id]._permissions)) {
           scope.errors[path.concat([index, 'id', id, '_permissions']).join('.')] = 'The update query cannot update the permissions.'

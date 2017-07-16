@@ -19,7 +19,8 @@ export default function(scope) {
     });
   } else if (token && token === process.env.CLIENT_SECRET) {
     scope.user = {
-      accessMethod: 'client'
+      accessMethod: 'client',
+      _id: 'client'
     }
   } else if (token) {
     return db.user.findOne({ tokens: token }).then((user) => {

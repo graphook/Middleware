@@ -68,8 +68,13 @@ export default function recursiveCheck(item, type, errors, path, parent, parentK
   } else if (type.type === 'keyword' || type.type === 'text') {
     if (typeof item !== 'string') {
       errors[path.join('.')] = 'Should be a string but is a ' + typeof item;
-    } else if (type.regex && !(new RegExp(type.regex)).test(item)) {
-      errors[path.join('.')] = 'Must follow the regular expression ' + type.regex;
+    } else {
+      if (type.regex && !(new RegExp(type.regex)).test(item)) {
+        errors[path.join('.')] = 'Must follow the regular expression ' + type.regex;
+      }
+      if (type.enums && type.enums.indexOf(item) === -1) {
+        errors[path.join('.')] = 'Is not a valid enum'
+      }
     }
   } else if (type.type === 'long' || type.type === 'integer' || type.type === 'short' ||
       type.type === 'byte' || type.type === 'double' || type.type === 'float') {
