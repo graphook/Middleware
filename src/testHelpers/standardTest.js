@@ -33,7 +33,19 @@ export default function(app, given, expected, done) {
       expect(expected.errors).to.deep.equal(errValues);
     }
     if (expected.body) {
-      expect(res.body).to.deep.equal(expected.body)
+      let cleansed = res.body;
+      Object.keys(expected.body).forEach((crudKey) => {
+        Object.keys(expected.body[crudKey]).forEach((typeKey) => {
+          if (cleansed[crudKey] && cleansed[crudKey][typeKey]) {
+            cleansed[crudKey][typeKey].forEach((object, index) => {
+              if (expected.body[crudKey][typeKey][index] && expected.body[crudKey][typeKey][index]._id === "AUTO_GENERATED_ID") {
+                object._id = "AUTO_GENERATED_ID";
+              }
+            });
+          }
+        })
+      });
+      expect(cleansed).to.deep.equal(expected.body)
     }
     if (expected.objects) {
       let cleansed = res.body;

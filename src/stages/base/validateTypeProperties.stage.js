@@ -4,7 +4,7 @@ import {validTypes} from 'appConstants';
 
 const objectSchema = {
   type: 'object',
-  requires: ['type'],
+  requires: ['type', 'fields'],
   fields: {
     type: {
       type: 'keyword'

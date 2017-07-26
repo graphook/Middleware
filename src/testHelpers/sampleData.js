@@ -1,4 +1,5 @@
 
+export const familyTypeId = "AV19M3pmabSTtBb93fgG";
 export const familyType = {
   "title": "Family",
   "description": "Describes a family unit. Usually one that lives in the same house.",
@@ -58,7 +59,7 @@ export const familyType = {
       },
       "_type": {
         "type": "keyword",
-        "constant": "familyType",
+        "constant": familyTypeId,
         "description": "Defines the object's Type as set_type."
       }
     },
@@ -68,12 +69,13 @@ export const familyType = {
   }
 }
 
+export const familySetId = "AV19M_7-abSTtBb93fgH";
 export const familySet = {
   title: "Cartoon Families",
   description: "A collection of families from various cartoons.",
   tags: ['sample'],
   type: {
-    _id: "familyType",
+    _id: familyTypeId,
     title: "Family"
   },
   creator: {
@@ -89,6 +91,15 @@ export const familySet = {
   _sets: ['set_set']
 }
 
+export const familyIds = [
+  "AV19NNWIabSTtBb93fgI",
+  "AV19NTPnabSTtBb93fgJ",
+  "AV19NVaSabSTtBb93fgK",
+  "AV19NXPbabSTtBb93fgL",
+  "AV19NY41abSTtBb93fgM",
+  "AV19NalAabSTtBb93fgN",
+  "AV19NcFOabSTtBb93fgO"  
+]
 export const families = [
   {
     "surname": "Simpson",

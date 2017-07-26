@@ -1,3 +1,4 @@
+import samples from 'testHelpers/requestData';
 
 const routes = [
   {
@@ -6,6 +7,7 @@ const routes = [
     handler: require('./handlers/welcome.handler'),
     category: 'Other',
     description: 'Calling this route will yield a welcome message. Use this route to test your connection to the server.',
+    sample: samples.testRoute
   },
 
   {
@@ -14,6 +16,7 @@ const routes = [
     handler: require('./handlers/object/readObject.handler'),
     category: 'Base Operations',
     description: 'Get an object with a certain object Id.',
+    sample: samples.getObject
   },
   {
     method: 'post',
@@ -21,6 +24,7 @@ const routes = [
     handler: require('./handlers/object/searchObject.handler'),
     category: 'Base Operations',
     description: 'Search for any object. Go to the "Search Tutorial" to learn how to format the body.',
+    sample: samples.searchObject
   },
   {
     method: 'post',
@@ -32,7 +36,8 @@ const routes = [
       'It is not possible to set the "numberOfSets" field of Types manually as this number must correspond to the number of sets with this type.',
       'It is not possible to set the "numberOfItems" field of Sets manually as this number must correspond to the number of items within this set.',
       'It is not possible to set the "stars" field of Sets manually. Nice try ;)'
-    ]
+    ],
+    sample: samples.createObject
   },
   {
     method: 'put',
@@ -45,7 +50,8 @@ const routes = [
       'It is not possible to update the "numberOfSets" field of Types manually as this number must correspond to the number of sets with this type.',
       'It is not possible to update the "numberOfItems" field of Sets manually as this number must correspond to the number of items within this set.',
       'It is not possible to update the "stars" field of Sets manually. Nice try ;)'
-    ]
+    ],
+    sample: samples.updateObject
   },
   {
     method: 'delete',
@@ -57,7 +63,8 @@ const routes = [
       'It is not possible to delete Types.',
       'If you delete a Set using this method, it will not automatically delete all items that are associated with only this set. If you wish to do this, use the DELETE /v2/set/:setId route.',
       'If you delete a member of a Set using this method, it will remove that member from all Sets. If you only wish to remove an item from one Set, use the DELETE /v2/set/:setId/item route.'
-    ]
+    ],
+    sample: samples.deleteObject
   },
 
 
@@ -67,6 +74,7 @@ const routes = [
     handler: require('./handlers/user/getToken.handler'),
     category: 'Authentication',
     description: 'Get a token to query the api by passing a username/email and password',
+    sample: samples.getToken
   },
   {
     method: 'post',
@@ -74,7 +82,8 @@ const routes = [
     handler: require('./handlers/user/createUser.handler'),
     category: 'Authentication',
     description: 'Create a new user',
-    doNotDocument: true
+    doNotDocument: true,
+    samples: samples.createUser
   },
   {
     method: 'post',
@@ -82,6 +91,7 @@ const routes = [
     handler: require('./handlers/user/validateUser.handler'),
     category: 'Authentication',
     description: 'Validate that a given user\'s credentials do not conflict with other users.',
+    sample: samples.validateUser
   },
   {
     method: 'get',
@@ -89,6 +99,7 @@ const routes = [
     handler: require('./handlers/user/getUser.handler'),
     category: 'Authentication',
     description: 'Get the user that is currently logged in.',
+    sample: samples.getUser
   },
 /*
   {
@@ -113,6 +124,7 @@ const routes = [
     handler: require('./handlers/set/createSet.handler'),
     category: 'Set Operations',
     description: 'Create a new data Set.',
+    sample: samples.createSet
   },
   {
     method: 'post',
@@ -120,6 +132,7 @@ const routes = [
     handler: require('./handlers/set/searchSet.handler'),
     category: 'Set Operations',
     description: 'Search all data Sets officially a part of zenow. Go to the "Search Tutorial" to learn how to format the body.',
+    sample: samples.searchSet
   },
   {
     method: 'get',
@@ -127,21 +140,24 @@ const routes = [
     handler: require('./handlers/set/readSet.handler'),
     category: 'Set Operations',
     description: 'Get a specific Set given a set id.',
+    sample: samples.getSet
   },
   {
     method: 'put',
     path: '/v2/set/:setId',
     handler: require('./handlers/set/updateSet.handler'),
     category: 'Set Operations',
-    description: 'Update a specific set given a set id. See the "Updating Tutorial" to learn how to make updates.'
-  },
+    description: 'Update a specific set given a set id. See the "Updating Tutorial" to learn how to make updates.',
+    sample: samples.updateSet
+ },
   {
     method: 'delete',
     path: '/v2/set/:setId',
     handler: require('./handlers/set/deleteSet.handler'),
     category: 'Set Operations',
     description: 'Delete a specific set given a set id.',
-    notes: [ 'If an object is a member of only this set, that object will also be deleted. If you do not want this to happen use DELETE /v2/object' ]
+    notes: [ 'If an object is a member of only this set, that object will also be deleted. If you do not want this to happen use DELETE /v2/object' ],
+    sample: samples.deleteSet
   },
   // Items
   {
@@ -150,6 +166,7 @@ const routes = [
     handler: require('./handlers/set/addItems.handler'),
     category: 'Set Item Operations',
     description: 'Add an Items to the Set.',
+    sample: samples.addItems
   },
   {
     method: 'post',
@@ -157,6 +174,7 @@ const routes = [
     handler: require('./handlers/set/searchItems.handler'),
     category: 'Set Item Operations',
     description: 'Search items within the Set. Go to the "Search Tutorial" to learn how to format the body.',
+    sample: samples.searchItems
   },
   {
     method: 'get',
@@ -164,6 +182,7 @@ const routes = [
     handler: require('./handlers/set/readItem.handler'),
     category: 'Set Item Operations',
     description: 'Get a specific item within the Set.',
+    sample: samples.getItem
   },
   {
     method: 'put',
@@ -171,6 +190,7 @@ const routes = [
     handler: require('./handlers/set/updateItems.handler'),
     category: 'Set Item Operations',
     description: 'Update Items in a set. See the "Updating Tutorial" to learn how to make updates.',
+    sample: samples.updateItem
   },
   {
     method: 'delete',
@@ -180,7 +200,8 @@ const routes = [
     description: 'Remove items from a set.',
     notes: [
       'This will delete the Item if this is the sole Set of which it is a member. Otherwise the Item will continue existing as a part of other Sets. If you wish to remove this item from all sets of which it is a member use the DELETE /v2/object route.'
-    ]
+    ],
+    sample: samples.removeItems
   },
   {
     method: 'put',
@@ -190,7 +211,8 @@ const routes = [
     description: 'Star a set for a particular user.',
     notes: [
       'It is not possible to star a set multiple times per user.'
-    ]
+    ],
+    sample: samples.starSet
   },
   {
     method: 'put',
@@ -198,6 +220,7 @@ const routes = [
     handler: require('./handlers/set/unstarSet.handler'),
     category: 'Set Operations',
     description: 'Unstar a set for a particular user.',
+    sample: samples.unstarSet
   },
   // Insights
   /*{
@@ -237,20 +260,23 @@ const routes = [
     handler: require('./handlers/type/readType.handler'),
     category: 'Type Operations',
     description: 'Get a specific Type given a type id',
+    sample: samples.getType
   },
   {
     method: 'post',
     path: '/v2/type',
     handler: require('./handlers/type/createType.handler'),
     category: 'Type Operations',
-    description: 'Create a Type. Go to the "Type Tutorial" to learn how to format the body.'
+    description: 'Create a Type. Go to the "Type Tutorial" to learn how to format the body.',
+    sample: samples.createType
   },
   {
     method: 'post',
     path: '/v2/type/search',
     handler: require('./handlers/type/searchType.handler'),
     category: 'Type Operations',
-    description: 'Search for Types. Go to the "Search Tutorial" to learn how to format the body.'
+    description: 'Search for Types. Go to the "Search Tutorial" to learn how to format the body.',
+    sample: samples.searchTypes
   }
 ]
 

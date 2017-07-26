@@ -51,7 +51,12 @@ export default function(done = () => {}) {
               type: 'keyword',
               description: 'The user access key for the api. This can also be passed in via a header variable.'
             }
-          }) : undefined
+          }) : {
+            apikey: {
+              type: 'keyword',
+              description: 'The user access key for the api. This can also be passed in via a header variable.'
+            }
+          }
         },
         headers: {
           type: "object",

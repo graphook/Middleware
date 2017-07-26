@@ -8,6 +8,7 @@
     "build": "babel src --out-dir build",
     "dev": "better-npm-run dev",
     "test": "better-npm-run test",
+    "integrationTest": "better-npm-run integrationTest",
     "postinstall": "npm run build",
     "initMongo": "better-npm-run initMongo",
     "initES": "better-npm-run initES",
@@ -31,6 +32,14 @@
     },
     "test": {
       "command": "mocha \"src/**/*.spec.js\" --compilers js:babel-register",
+      "env": {
+        "NODE_PATH": "./src",
+        "NODE_ENV": "dev",
+        "PORT": 3030
+      }
+    },
+    "integrationTest": {
+      "command": "mocha \"src/testHelpers/integrationTest.spec.js\" --compilers js:babel-register",
       "env": {
         "NODE_PATH": "./src",
         "NODE_ENV": "dev",
