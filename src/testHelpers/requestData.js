@@ -1,5 +1,5 @@
-import {families, familyIds, familySet, familySetId, familyTypeId} from 'testHelpers/sampleData';
-import {type_set, set_set} from 'defaultObjects';
+import {families, familyIds, familySet, familySetId, familyTypeId, familyType} from 'testHelpers/sampleData';
+import {type_set, set_set, type_type, set_type} from 'defaultObjects';
 import {cloneAssign} from 'utilities';
 
 const addFamilyMetadata = (family, index) => {
